@@ -56,7 +56,7 @@ class CoopCog(commands.Cog, name="サーモンラン"):
 
             embed.add_field(name=new_data[0] + "-" + new_data[1], value=value, inline=False)
         embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
-        embed.set_author(name=data[0][2], icon_url=f"{get_rule_image('サーモンラン')}")
+        embed.set_author(name="サーモンラン", icon_url=f"{get_rule_image('サーモンラン')}")
 
         await ctx.reply(embed=embed)
 
