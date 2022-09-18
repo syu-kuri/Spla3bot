@@ -5,7 +5,7 @@ from lib.functions import *
 from lib.config import *
 
 
-class RegularCog(commands.Cog, name="サーモンラン"):
+class CoopCog(commands.Cog, name="サーモンラン"):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
@@ -60,4 +60,4 @@ class RegularCog(commands.Cog, name="サーモンラン"):
 
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(RegularCog(bot))
+    await bot.add_cog(CoopCog(bot))
