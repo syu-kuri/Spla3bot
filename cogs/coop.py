@@ -10,7 +10,7 @@ class CoopCog(commands.Cog, name="サーモンラン"):
         self.bot = bot
 
     @commands.hybrid_command(name="現在のサーモンラン", description="現在のサーモンランのステージ情報を表示します。", with_app_command=True)
-    async def now_regular(self, ctx: discord.Interaction):
+    async def now_coop(self, ctx: discord.Interaction):
         """現在のサーモンランのステージ情報を表示します。"""
         data = coop_molding(get_schedule("coop-grouping-regular", "now"))
 
@@ -26,7 +26,7 @@ class CoopCog(commands.Cog, name="サーモンラン"):
         await ctx.reply(embed=embed)
 
     @commands.hybrid_command(name="次のサーモンラン", description="次のサーモンランのステージ情報を表示します。", with_app_command=True)
-    async def next_regular(self, ctx: discord.Interaction):
+    async def next_coop(self, ctx: discord.Interaction):
         """次のサーモンランのステージ情報を表示します。"""
         data = coop_molding(get_schedule("coop-grouping-regular", "next"))
 
@@ -42,16 +42,16 @@ class CoopCog(commands.Cog, name="サーモンラン"):
         await ctx.reply(embed=embed)
 
     @commands.hybrid_command(name="すべてのサーモンラン", description="現在から24時間先までのサーモンランのステージ情報を表示します。", with_app_command=True)
-    async def all_regular(self, ctx: discord.Interaction):
+    async def all_coop(self, ctx: discord.Interaction):
         """現在から24時間先までのサーモンランのステージ情報を表示します。"""
-        data = schedule_molding("coop-grouping-regular")
+        data = coop_schedule_molding("coop-grouping-regular")
 
         embed = discord.Embed(title="現在から24時間先までのスケジュール", description="", color=0xf02c7d)
         for i in range(len(data)):
             new_data = data[i]
 
-            stage = "ステージ：" + new_data[3][0]
-            weapons = "ブキ：" + data[i][2][0] + "\n" + data[i][2][1] + "\n" + data[i][2][2] + "\n" + data[i][2][3]
+            stage = "ステージ：" + new_data[2]
+            weapons = "ブキ：\n" + new_data[3][0] + "\n" + new_data[3][1] + "\n" + new_data[3][2] + "\n" + new_data[3][3]
             value = stage + "\n" + weapons
 
             embed.add_field(name=new_data[0] + "-" + new_data[1], value=value, inline=False)
