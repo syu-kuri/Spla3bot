@@ -16,11 +16,12 @@ class CoopCog(commands.Cog, name="サーモンラン"):
 
         weapons = f"{data[3][0]} \n {data[3][1]}\n {data[3][2]}\n {data[3][3]}"
 
-        embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]} (開催中)", color=0x7eff00)
+        embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]} (開催中)", color=0xf02c7d)
         embed.add_field(name="`ステージ`", value=data[2], inline=False)
         embed.add_field(name="`ブキ`", value=weapons, inline=False)
-        embed.set_thumbnail(url=f"{get_rule_image(data[2])}")
+        embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image('サーモンラン')}")
+        embed.set_image(url=get_coop_image(data[2]))
 
         await ctx.reply(embed=embed)
 
@@ -31,11 +32,12 @@ class CoopCog(commands.Cog, name="サーモンラン"):
 
         weapons = f"{data[3][0]} \n {data[3][1]}\n {data[3][2]}\n {data[3][3]}"
 
-        embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]}", color=0x7eff00)
+        embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]}", color=0xf02c7d)
         embed.add_field(name="`ステージ`", value=data[2], inline=False)
         embed.add_field(name="`ブキ`", value=weapons, inline=False)
-        embed.set_thumbnail(url=f"{get_rule_image(data[2])}")
+        embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image('サーモンラン')}")
+        embed.set_image(url=get_coop_image(data[2]))
 
         await ctx.reply(embed=embed)
 
@@ -44,7 +46,7 @@ class CoopCog(commands.Cog, name="サーモンラン"):
         """現在から24時間先までのサーモンランのステージ情報を表示します。"""
         data = schedule_molding("coop-grouping-regular")
 
-        embed = discord.Embed(title="現在から24時間先までのスケジュール", description="", color=0x7eff00)
+        embed = discord.Embed(title="現在から24時間先までのスケジュール", description="", color=0xf02c7d)
         for i in range(len(data)):
             new_data = data[i]
 
@@ -53,7 +55,7 @@ class CoopCog(commands.Cog, name="サーモンラン"):
             value = stage + "\n" + weapons
 
             embed.add_field(name=new_data[0] + "-" + new_data[1], value=value, inline=False)
-        embed.set_thumbnail(url=f"{get_rule_image(data[0][2])}")
+        embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[0][2], icon_url=f"{get_rule_image('サーモンラン')}")
 
         await ctx.reply(embed=embed)
