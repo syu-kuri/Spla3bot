@@ -45,9 +45,9 @@ This bot uses the API of [Spla3 API](https://spla3.yuu26.com/) produced by Emuon
 <div align="center"><img src="docs/img/example.png" width="400"/></div>
 
 ## Future Progress
+* ~~Support for Salmon Run information after API support~~
 * Search for specific rules
 * Search for specific time
-* Support for Salmon Run information after API support
 * Support for shortened command search
 
 ## Reports and Requests
