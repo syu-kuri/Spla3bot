@@ -1,6 +1,13 @@
 <div align="center"><img src="docs/img/logo.png" width="400"/></div>
 
 # Discord Bot for Splatoon 3
+<p align="center">
+  <a href="//github.com/syu-kuri/Spla3bot/releases"><img src="https://img.shields.io/github/v/release/syu-kuri/Spla3bot"></a>
+  <a href="//github.com/syu-kuri/Spla3bot/issues"><img src="https://img.shields.io/github/issues-raw/syu-kuri/Spla3bot"></a>
+  <a href="//github.com/syu-kuri/Spla3bot/commits/main"><img src="https://img.shields.io/github/last-commit/syu-kuri/Spla3bot"></a>
+  <a href="//github.com/syu-kuri/Spla3bot"><img src="https://img.shields.io/github/languages/code-size/syu-kuri/Spla3bot"></a>
+</p>
+
 
 This is a Discord Bot that returns Splatoon 3 stage information by either Mention, Slash Command, or Command.
 
@@ -42,3 +49,6 @@ This bot uses the API of [Spla3 API](https://spla3.yuu26.com/) produced by Emuon
 * Search for specific time
 * Support for Salmon Run information after API support
 * Support for shortened command search
+
+## Reports and Requests
+Please report bugs and requests for additional features to [Discord Server](https://discord.gg/zwbvUPTZHc) or to an issue in this repository.
