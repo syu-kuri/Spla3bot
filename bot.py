@@ -13,6 +13,7 @@ extensions = [
     'cogs.regular',
     'cogs.challenge',
     'cogs.open',
+    'cogs.coop',
 ]
 
 class Spla3Bot(commands.Bot):
