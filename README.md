@@ -40,14 +40,17 @@ Please report bugs and requests for additional features to [Discord Server](http
 * `現在のナワバリ` ... Returns the current Navavari stage information.
 * `現在のバンカラチャレンジ` ... Returns the stage information of the current challenge match
 * `現在のバンカラオープン` ... Returns stage information for the current open match
+* `現在のサーモンラン` ... Returns the current Salmon Run stage and buki information
 ### View next stage information by relative specification
 * `次のナワバリ` ... Returns stage information for the next Navarari
 * `次のバンカラチャレンジ` ... Returns stage information for the next challenge match
 * `次のバンカラオープン` ... Returns stage information for the next open match
+* `次のサーモンラン` ... Returns stage and buki information for the next Salmon Run
 ### View stage information for the next 24 hours from the current stage
-* `すべてのナワバリ` ... Returns the stage information of the next Navarry for the next 24 hours
-* `すべてのバンカラチャレンジ` ... Returns stage information for the next challenge match up to 24 hours in the future
-* `すべてのバンカラオープン` ... Returns stage information for open matches up to 24 hours in the future
+* `すべてのナワバリ` ... Return stage information for up to 12 Navarari
+* `すべてのバンカラチャレンジ` ... Returns stage information for up to 12 challenge matches
+* `すべてのバンカラオープン` ... Returns stage information for up to 12 open matches
+* `すべてのサーモンラン` ... Returns up to 12 Salmon Run stages and buki information
 
 ## Example of command execution
 <div align="center"><img src="docs/img/example.png" width="400"/></div>
