@@ -32,7 +32,7 @@ class ErrorCog(Cog):
             emb = discord.Embed(title="エラーが発生しました", description="ユーザーが見つかりませんでした。", color=discord.Color.red())
             await ctx.reply(embed=emb)
         else:
-            ch = 982915045891665940
+            ch = 1021461009925415062
             embed = discord.Embed(title="エラー情報", description="", color=0xf00)
             if isinstance(ctx.channel, discord.channel.DMChannel):
                 embed.add_field(name="エラー発生サーバー名", value=ctx.channel, inline=False)
