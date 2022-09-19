@@ -26,9 +26,7 @@ class AdminCog(Cog, name="Bot製作者のみ使用可能コマンド"):
         fields = dict['fields']
         emb = discord.Embed(title=dict['title'] + "取得", description="", color=dict['color'])
         for field in fields:
-            # print(field['name'], field['value'], field['inline'])
             emb.add_field(name=field['name'], value=field['value'], inline=field['inline'])
-        # asyncio.get_event_loop().run_until_complete(await ctx.reply(embed=emb))
         await ctx.reply(embed=emb)
 
 
