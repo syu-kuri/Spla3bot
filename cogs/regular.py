@@ -9,32 +9,39 @@ class RegularCog(commands.Cog, name="ナワバリ"):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @commands.hybrid_command(name="現在のナワバリ", description="現在のナワバリのステージ情報を表示します。", with_app_command=True)
-    async def now_regular(self, ctx: discord.Interaction):
-        """現在のナワバリのステージ情報を表示します。"""
+
+    @commands.hybrid_group()
+    async def regular(self, ctx):
+        if ctx.invoked_subcommand is None:
+            emb = discord.Embed("エラーが発生しました", description="このコマンドは引数が必要です。", color=discord.Colour.red())
+            await ctx.reply(embed=emb)
+
+    @regular.command(description="現在のナワバリ情報を表示します。")
+    async def now(self, ctx: discord.Interaction):
         data = molding(get_schedule("regular", "now"))
 
         embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]} (開催中)", color=0x7eff00)
         embed.add_field(name="`ステージ`", value=data[3][0] + "\n" + data[3][1], inline=False)
         embed.set_thumbnail(url=f"{get_rule_image(data[2])}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image(data[2])}")
+        embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)
 
-    @commands.hybrid_command(name="次のナワバリ", description="次のナワバリのステージ情報を表示します。", with_app_command=True)
-    async def next_regular(self, ctx: discord.Interaction):
-        """次のナワバリのステージ情報を表示します。"""
+    @regular.command(description="次のナワバリ情報を表示します。")
+    async def next(self, ctx: discord.Interaction):
         data = molding(get_schedule("regular", "next"))
 
         embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]}", color=0x7eff00)
         embed.add_field(name="`ステージ`", value=data[3][0] + "\n" + data[3][1], inline=False)
         embed.set_thumbnail(url=f"{get_rule_image(data[2])}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image(data[2])}")
+        embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)
 
-    @commands.hybrid_command(name="すべてのナワバリ", description="現在から24時間先までのナワバリのステージ情報を表示します。", with_app_command=True)
-    async def all_regular(self, ctx: discord.Interaction):
+    @regular.command(description="現在から最大12個のナワバリ情報を表示します。")
+    async def all(self, ctx: discord.Interaction):
         """現在から24時間先までのナワバリのステージ情報を表示します。"""
         data = schedule_molding("regular")
 
@@ -44,6 +51,7 @@ class RegularCog(commands.Cog, name="ナワバリ"):
             embed.add_field(name=new_data[0] + "-" + new_data[1], value=new_data[3][0] + "、" + new_data[3][1], inline=False)
         embed.set_thumbnail(url=f"{get_rule_image(data[0][2])}")
         embed.set_author(name=data[0][2], icon_url=f"{get_rule_image(data[0][2])}")
+        embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)
 
