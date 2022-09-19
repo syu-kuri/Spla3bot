@@ -40,7 +40,7 @@ class OpenCog(commands.Cog, name="バンカラ(オープン)"):
 
         await ctx.reply(embed=embed)
 
-    @open.command(description="現在から最大12個のナワバリ情報を表示します。")
+    @open.command(description="現在から最大12個のバンカラマッチ(オープン)情報を表示します。")
     async def all(self, ctx: discord.Interaction):
         data = schedule_molding("bankara-open")
 

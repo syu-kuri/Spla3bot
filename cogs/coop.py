@@ -9,9 +9,15 @@ class CoopCog(commands.Cog, name="サーモンラン"):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @commands.hybrid_command(name="現在のサーモンラン", description="現在のサーモンランのステージ情報を表示します。", with_app_command=True)
-    async def now_coop(self, ctx: discord.Interaction):
-        """現在のサーモンランのステージ情報を表示します。"""
+
+    @commands.hybrid_group()
+    async def coop(self, ctx):
+        if ctx.invoked_subcommand is None:
+            emb = discord.Embed("エラーが発生しました", description="このコマンドは引数が必要です。", color=discord.Colour.red())
+            await ctx.reply(embed=emb)
+
+    @coop.command(description="現在のサーモンラン情報を表示します。")
+    async def now(self, ctx: discord.Interaction):
         data = coop_molding(get_schedule("coop-grouping-regular", "now"))
 
         weapons = f"{data[3][0]} \n {data[3][1]}\n {data[3][2]}\n {data[3][3]}"
@@ -22,12 +28,12 @@ class CoopCog(commands.Cog, name="サーモンラン"):
         embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image('サーモンラン')}")
         embed.set_image(url=get_coop_image(data[2]))
+        embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)
 
-    @commands.hybrid_command(name="次のサーモンラン", description="次のサーモンランのステージ情報を表示します。", with_app_command=True)
-    async def next_coop(self, ctx: discord.Interaction):
-        """次のサーモンランのステージ情報を表示します。"""
+    @coop.command(description="次のサーモンラン情報を表示します。")
+    async def next(self, ctx: discord.Interaction):
         data = coop_molding(get_schedule("coop-grouping-regular", "next"))
 
         weapons = f"{data[3][0]} \n {data[3][1]}\n {data[3][2]}\n {data[3][3]}"
@@ -38,15 +44,15 @@ class CoopCog(commands.Cog, name="サーモンラン"):
         embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image('サーモンラン')}")
         embed.set_image(url=get_coop_image(data[2]))
+        embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)
 
-    @commands.hybrid_command(name="すべてのサーモンラン", description="現在から24時間先までのサーモンランのステージ情報を表示します。", with_app_command=True)
-    async def all_coop(self, ctx: discord.Interaction):
-        """現在から24時間先までのサーモンランのステージ情報を表示します。"""
+    @coop.command(description="現在から最大12個のサーモンラン情報を表示します。")
+    async def all(self, ctx: discord.Interaction):
         data = coop_schedule_molding("coop-grouping-regular")
 
-        embed = discord.Embed(title="現在から24時間先までのスケジュール", description="", color=0xf02c7d)
+        embed = discord.Embed(title=f"現在から{len(data)}個先までのスケジュール", description="", color=0xf02c7d)
         for i in range(len(data)):
             new_data = data[i]
 

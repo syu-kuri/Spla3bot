@@ -40,7 +40,7 @@ class ChallengeCog(commands.Cog, name="バンカラ(チャレンジ)"):
 
         await ctx.reply(embed=embed)
 
-    @challenge.command(description="現在から最大12個のナワバリ情報を表示します。")
+    @challenge.command(description="現在から最大12個のバンカラマッチ(チャレンジ)情報を表示します。")
     async def all(self, ctx: discord.Interaction):
         data = schedule_molding("bankara-challenge")
 

@@ -42,10 +42,9 @@ class RegularCog(commands.Cog, name="ナワバリ"):
 
     @regular.command(description="現在から最大12個のナワバリ情報を表示します。")
     async def all(self, ctx: discord.Interaction):
-        """現在から24時間先までのナワバリのステージ情報を表示します。"""
         data = schedule_molding("regular")
 
-        embed = discord.Embed(title="現在から24時間先までのスケジュール", description="", color=0x7eff00)
+        embed = discord.Embed(title=f"現在から{len(data)}個先までのスケジュール", description="", color=0x7eff00)
         for i in range(len(data)):
             new_data = data[i]
             embed.add_field(name=new_data[0] + "-" + new_data[1], value=new_data[3][0] + "、" + new_data[3][1], inline=False)
