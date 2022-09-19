@@ -31,6 +31,9 @@ class Spla3Bot(commands.Bot):
         print("ログインしました")
         print('----------------')
 
+    async def setup_hook(self):
+        await self.tree.sync()
+
 
 async def main():
     bot = Spla3Bot()
