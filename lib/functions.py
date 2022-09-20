@@ -78,7 +78,7 @@ def get_rule_image(p1):
         "サーモンラン": "https://cdn.discordapp.com/attachments/808221718106603540/1021002540193685554/unknown.png",
         "ガチエリア": "https://cdn.discordapp.com/attachments/808221718106603540/815038217400090634/show.png",
         "ガチヤグラ": "https://cdn.discordapp.com/attachments/808221718106603540/815038610101370980/show.png",
-        "ガチホコ": "https://cdn.discordapp.com/attachments/808221718106603540/815040449055162368/show.png",
+        "ガチホコバトル": "https://cdn.discordapp.com/attachments/808221718106603540/815040449055162368/show.png",
         "ガチアサリ": "https://cdn.discordapp.com/attachments/808221718106603540/815040479166595092/show.png"
     }
     return rule_images.get(p1)
