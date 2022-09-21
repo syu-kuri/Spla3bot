@@ -2,9 +2,9 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Cog
 
-
 import traceback
 
+from lib.config import *
 
 class ErrorCog(Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -32,7 +32,7 @@ class ErrorCog(Cog):
             emb = discord.Embed(title="エラーが発生しました", description="ユーザーが見つかりませんでした。", color=discord.Color.red())
             await ctx.reply(embed=emb)
         elif isinstance(error, commands.HybridCommandError):
-            ch = 1021461009925415062
+            ch = error_ch
 
             view = discord.ui.View()
             style = discord.ButtonStyle.link
@@ -71,7 +71,7 @@ class ErrorCog(Cog):
                 emb.add_field(name="問い合わせID", value=m.id)
                 await ctx.reply(embed=emb, view=view)
         else:
-            ch = 1021461009925415062
+            ch = error_ch
 
             view = discord.ui.View()
             style = discord.ButtonStyle.link
