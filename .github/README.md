@@ -53,7 +53,7 @@ Please report bugs and requests for additional features to [Discord Server](http
 * `coop all` ... Returns up to 12 Salmon Run stages and buki information
 
 ## Example of command execution
-<div align="center"><img src="docs/img/example1.png" width="400"/></div>
+<div align="center"><img src="../docs/img/example1.png" width="400"/></div>
 
 ## Future Progress
 * ~~Support for Salmon Run information after API support~~
