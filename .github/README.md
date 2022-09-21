@@ -1,4 +1,4 @@
-<div align="center"><img src="docs/img/logo.png" width="400"/></div>
+<div align="center"><img src="../docs/img/logo.png" width="400"/></div>
 
 # Discord Bot for Splatoon 3
 <p align="center">
