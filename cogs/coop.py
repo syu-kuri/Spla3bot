@@ -20,14 +20,14 @@ class CoopCog(commands.Cog, name="サーモンラン"):
     async def now(self, ctx: discord.Interaction):
         data = coop_molding(get_schedule("coop-grouping-regular", "now"))
 
-        weapons = f"{data[3][0]} \n {data[3][1]}\n {data[3][2]}\n {data[3][3]}"
+        weapons = f"{data[4][0]} \n {data[4][1]}\n {data[4][2]}\n {data[4][3]}"
 
         embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]} (開催中)", color=0xf02c7d)
         embed.add_field(name="`ステージ`", value=data[2], inline=False)
         embed.add_field(name="`ブキ`", value=weapons, inline=False)
         embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image('サーモンラン')}")
-        embed.set_image(url=get_coop_image(data[2]))
+        embed.set_image(url=data[3])
         embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)
@@ -36,14 +36,14 @@ class CoopCog(commands.Cog, name="サーモンラン"):
     async def next(self, ctx: discord.Interaction):
         data = coop_molding(get_schedule("coop-grouping-regular", "next"))
 
-        weapons = f"{data[3][0]} \n {data[3][1]}\n {data[3][2]}\n {data[3][3]}"
+        weapons = f"{data[4][0]} \n {data[4][1]}\n {data[4][2]}\n {data[4][3]}"
 
         embed = discord.Embed(title="開催時間", description=f"{data[0]} - {data[1]}", color=0xf02c7d)
         embed.add_field(name="`ステージ`", value=data[2], inline=False)
         embed.add_field(name="`ブキ`", value=weapons, inline=False)
         embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
         embed.set_author(name=data[2], icon_url=f"{get_rule_image('サーモンラン')}")
-        embed.set_image(url=get_coop_image(data[2]))
+        embed.set_image(url=data[3])
         embed.set_footer(text="Creator： しゅーくり#9118(Discord)/syu-kuri(GitHub)")
 
         await ctx.reply(embed=embed)

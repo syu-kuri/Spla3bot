@@ -14,6 +14,7 @@ extensions = [
     'cogs.challenge',
     'cogs.open',
     'cogs.coop',
+    'cogs.fest',
 ]
 
 class Spla3Bot(commands.Bot):

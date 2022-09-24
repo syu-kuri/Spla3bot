@@ -1,5 +1,6 @@
-import datetime
+from pprint import pprint
 import requests
+import datetime
 
 def user_agent():
     headers = {
@@ -23,6 +24,7 @@ def get_all_schedule(p1):
         results = data['results']
         return results
 
+
 def time_molding(p1):
     _time = datetime.datetime.strptime(p1, '%Y-%m-%dT%H:%M:%S%z')
     time = _time.strftime('%m/%d %H:%M')
@@ -42,11 +44,20 @@ def molding(p1):
 
     return [start_time, end_time, rule_name, stages]
 
+def schedule_molding(p1):
+    all_data = get_all_schedule(p1)
+    results = []
+    for num in range(len(all_data)):
+        results.append(molding(all_data[num]))
+    return results
+
+
 def coop_molding(p1):
     data = p1
     st = data["start_time"]
     et = data["end_time"]
     stage = data["stage"]["name"]
+    image = data["stage"]["image"]
 
     start_time = time_molding(st)
     end_time = time_molding(et)
@@ -55,14 +66,7 @@ def coop_molding(p1):
     for weapon in data["weapons"]:
         weapons.append(weapon["name"])
 
-    return[start_time, end_time, stage, weapons]
-
-def schedule_molding(p1):
-    all_data = get_all_schedule(p1)
-    results = []
-    for num in range(len(all_data)):
-        results.append(molding(all_data[num]))
-    return results
+    return[start_time, end_time, stage, image, weapons]
 
 def coop_schedule_molding(p1):
     all_data = get_all_schedule(p1)
@@ -70,6 +74,7 @@ def coop_schedule_molding(p1):
     for num in range(len(all_data)):
         results.append(coop_molding(all_data[num]))
     return results
+
 
 def get_rule_image(p1):
     rule_images = {
