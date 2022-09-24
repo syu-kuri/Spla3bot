@@ -16,7 +16,7 @@ class FestCog(commands.Cog, name="フェス"):
             emb = discord.Embed("エラーが発生しました", description="このコマンドは引数が必要です。", color=discord.Colour.red())
             await ctx.reply(embed=emb)
 
-    @fest.command(description="現在のナワバリ情報を表示します。")
+    @fest.command(description="現在のフェス情報を表示します。")
     async def now(self, ctx: discord.Interaction):
         data = molding(get_schedule("fest", "now"))
 
@@ -28,7 +28,7 @@ class FestCog(commands.Cog, name="フェス"):
 
         await ctx.reply(embed=embed)
 
-    @fest.command(description="次のナワバリ情報を表示します。")
+    @fest.command(description="次のフェス情報を表示します。")
     async def next(self, ctx: discord.Interaction):
         data = molding(get_schedule("fest", "next"))
 
@@ -40,7 +40,7 @@ class FestCog(commands.Cog, name="フェス"):
 
         await ctx.reply(embed=embed)
 
-    @fest.command(description="現在から最大12個のナワバリ情報を表示します。")
+    @fest.command(description="現在から最大12個のフェス情報を表示します。")
     async def all(self, ctx: discord.Interaction):
         data = schedule_molding("fest")
 
