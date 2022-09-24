@@ -37,20 +37,23 @@ Please report bugs and requests for additional features to [Discord Server](http
 
 ## List of commands
 ### View current stage information
-* `regular now` ... Returns the current Navavari stage information.
+* `regular now` ... Returns the current Navavari stage information
 * `challenge now` ... Returns the stage information of the current challenge match
 * `open now` ... Returns stage information for the current open match
 * `coop now` ... Returns the current Salmon Run stage and buki information
+* `fest now` ... Returns the current fest stage information
 ### View next stage information by relative specification
 * `regular next` ... Returns stage information for the next Navarari
 * `challenge next` ... Returns stage information for the next challenge match
 * `open next` ... Returns stage information for the next open match
 * `coop next` ... Returns stage and buki information for the next Salmon Run
+* `fest next` ... Returns stage information for the next fest
 ### View stage information for the next 24 hours from the current stage
 * `regular all` ... Return stage information for up to 12 Navarari
 * `challenge all` ... Returns stage information for up to 12 challenge matches
 * `open all` ... Returns stage information for up to 12 open matches
 * `coop all` ... Returns up to 12 Salmon Run stages and buki information
+* `fest all` ... Return stage information for up to 12 fest
 
 ## Example of command execution
 <div align="center"><img src="../docs/img/example1.png" width="400"/></div>
@@ -60,3 +63,4 @@ Please report bugs and requests for additional features to [Discord Server](http
 * Search for specific rules
 * Search for specific time
 * Support for shortened command search
+* Respond to fest in all commands
