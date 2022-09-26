@@ -1,4 +1,6 @@
 from typing import Optional
+import json
+import random
 
 import discord
 from discord import app_commands
@@ -100,6 +102,27 @@ class Spla3Cog(Cog):
                 embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
                 embed.set_image(url=data[3])
         await ctx.followup.send(embed=embed)
+
+
+    @app_commands.command(
+        name="weapon",
+        description="ブキガチャを行います"
+    )
+    async def weapon(self, ctx: discord.Interaction):
+        await ctx.response.defer(ephemeral=True)
+        weapons3_file = "src/weapons3.json"
+        with open(weapons3_file, 'r', encoding="utf-8") as f:
+            json_datas = json.load(f)
+
+        _num = len(json_datas)
+        num = random.randint(0, _num - 1)
+        weapon_data = json_datas[num]
+
+        embed = discord.Embed(title=f"{ctx.user.name}のブキはこれだ！", description="", color=discord.Colour.yellow())
+        embed.add_field(name="ブキ名", value=f'```{weapon_data["name"]}```', inline=False)
+        embed.add_field(name="サブ", value=f'```{weapon_data["sub"]}```', inline=True)
+        embed.add_field(name="スペシャル", value=f'```{weapon_data["special"]}```', inline=True)
+        await ctx.followup.send(embed=embed, ephemeral=True)
 
 
 async def setup(bot: commands.Bot) -> None:
