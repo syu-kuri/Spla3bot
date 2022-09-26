@@ -33,13 +33,15 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 ### View stage information
 * `stage [rule] Option[time]` ... Returns stage information for the selected rule and time.
 
+### Random select weapon
+* `weapon` ... Returns a random selection of one from all the weapons.
 
 ## Example of command execution
 <div align="center"><img src="../docs/img/example2.png" width="400"/></div>
 
 ## Future Progress
 * ~~Support for Salmon Run information after API support~~
+* ~~Add random weapon selection~~
 * Get all stage information
 * Add stage image
-* Add random weapon selection
 * 4 vs. 4 teaming
