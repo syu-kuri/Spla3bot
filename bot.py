@@ -10,11 +10,7 @@ from lib.discord import *
 extensions = [
     'cogs.admin',
     'cogs.error',
-    'cogs.regular',
-    'cogs.challenge',
-    'cogs.open',
-    'cogs.coop',
-    'cogs.fest',
+    'cogs.spla3',
 ]
 
 class Spla3Bot(commands.Bot):
