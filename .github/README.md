@@ -37,7 +37,10 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 * `weapon` ... Returns a random selection of one from all the weapons.
 
 ## Example of command execution
-<div align="center"><img src="../docs/img/example2.png" width="400"/></div>
+<div align="center">
+  <img src="../docs/img/example2.png" width="400"/>
+  <img src="../docs/img/example3.png" width="400"/>
+</div>
 
 ## Future Progress
 * ~~Support for Salmon Run information after API support~~
