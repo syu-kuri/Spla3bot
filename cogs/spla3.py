@@ -125,5 +125,94 @@ class Spla3Cog(Cog):
         await ctx.followup.send(embed=embed, ephemeral=True)
 
 
+    @app_commands.command(
+        name="sub",
+        description="サブウェポンからブキを検索します"
+    )
+    @app_commands.describe(subs="検索するサブウェポンを選択してください")
+    @app_commands.rename(subs="サブウェポン")
+    @app_commands.choices(
+        subs = [
+            app_commands.Choice(name="カーリングボム", value="カーリングボム"),
+            app_commands.Choice(name="キューバンボム", value="キューバンボム"),
+            app_commands.Choice(name="クイックボム", value="クイックボム"),
+            app_commands.Choice(name="ジャンプビーコン", value="ジャンプビーコン"),
+            app_commands.Choice(name="スプラッシュシールド", value="スプラッシュシールド"),
+            app_commands.Choice(name="スプラッシュボム", value="スプラッシュボム"),
+            app_commands.Choice(name="スプリンクラー", value="スプリンクラー"),
+            app_commands.Choice(name="タンサンボム", value="タンサンボム"),
+            app_commands.Choice(name="トラップ", value="トラップ"),
+            app_commands.Choice(name="トーピード", value="トーピード"),
+            app_commands.Choice(name="ポイズンミスト", value="ポイズンミスト"),
+            app_commands.Choice(name="ポイントセンサー", value="ポイントセンサー"),
+            app_commands.Choice(name="ホップソナー", value="ラインマーカー"),
+            app_commands.Choice(name="ロボットボム", value="ロボットボム"),
+        ]
+    )
+    async def sub_weapon(self, ctx: discord.Interaction, subs: app_commands.Choice[str]):
+        await ctx.response.defer()
+        weapons3_file = "src/weapons3.json"
+        with open(weapons3_file, 'r', encoding="utf-8") as f:
+            json_datas = json.load(f)
+
+        items = []
+        weapons = ""
+        for i in range(len(json_datas)):
+            if json_datas[i]["sub"] == subs.value:
+                items.append(json_datas[i])
+        for i in range(len(items)):
+            weapons += items[i]["name"] + "\n"
+        if len(items) != 0:
+            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description=f"```{weapons}```", color=discord.Colour.blue())
+        else:
+            embed = discord.Embed(title=f"ブキが見つかりました", description=f"{subs.value}で検索した結果、このサブウェポンのブキは見つかりませんでした", color=discord.Colour.red())
+        await ctx.followup.send(embed=embed)
+
+
+    @app_commands.command(
+        name="special",
+        description="スペシャルからブキを検索します"
+    )
+    @app_commands.describe(specials="検索するスペシャルを選択してください")
+    @app_commands.rename(specials="スペシャル")
+    @app_commands.choices(
+        specials = [
+            app_commands.Choice(name="アメフラシ", value="アメフラシ"),
+            app_commands.Choice(name="ウルトラショット", value="ウルトラショット"),
+            app_commands.Choice(name="ウルトラハンコ", value="ウルトラハンコ"),
+            app_commands.Choice(name="エナジースタンド", value="エナジースタンド"),
+            app_commands.Choice(name="カニタンク", value="カニタンク"),
+            app_commands.Choice(name="キューインキ", value="キューインキ"),
+            app_commands.Choice(name="グレートバリア", value="グレートバリア"),
+            app_commands.Choice(name="サメライド", value="サメライド"),
+            app_commands.Choice(name="ショックワンダー", value="ショックワンダー"),
+            app_commands.Choice(name="ジェットパック", value="ジェットパック"),
+            app_commands.Choice(name="トリプルトルネード", value="トリプルトルネード"),
+            app_commands.Choice(name="ナイスダマ", value="ナイスダマ"),
+            app_commands.Choice(name="ホップソナー", value="ホップソナー"),
+            app_commands.Choice(name="マルチミサイル", value="マルチミサイル"),
+            app_commands.Choice(name="メガホンレーザー5.1ch", value="メガホンレーザー5.1ch"),
+        ]
+    )
+    async def special_weapon(self, ctx: discord.Interaction, specials: app_commands.Choice[str]):
+        await ctx.response.defer()
+        weapons3_file = "src/weapons3.json"
+        with open(weapons3_file, 'r', encoding="utf-8") as f:
+            json_datas = json.load(f)
+
+        items = []
+        weapons = ""
+        for i in range(len(json_datas)):
+            if json_datas[i]["special"] == specials.value:
+                items.append(json_datas[i])
+        for i in range(len(items)):
+            weapons += items[i]["name"] + "\n"
+        if len(items) != 0:
+            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description=f"```{weapons}```", color=discord.Colour.blue())
+        else:
+            embed = discord.Embed(title=f"ブキが見つかりました", description=f"{specials.value}で検索した結果、このスペシャルのブキは見つかりませんでした", color=discord.Colour.red())
+        await ctx.followup.send(embed=embed)
+
+
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Spla3Cog(bot))
