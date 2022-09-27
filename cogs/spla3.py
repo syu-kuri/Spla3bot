@@ -163,7 +163,8 @@ class Spla3Cog(Cog):
         for i in range(len(items)):
             weapons += items[i]["name"] + "\n"
         if len(items) != 0:
-            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description=f"```{weapons}```", color=discord.Colour.blue())
+            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description="", color=discord.Colour.blue())
+            embed.add_field(name=f"{subs.value}のブキ一覧", value=f"```{weapons}```")
         else:
             embed = discord.Embed(title=f"ブキが見つかりました", description=f"{subs.value}で検索した結果、このサブウェポンのブキは見つかりませんでした", color=discord.Colour.red())
         await ctx.followup.send(embed=embed)
@@ -208,7 +209,8 @@ class Spla3Cog(Cog):
         for i in range(len(items)):
             weapons += items[i]["name"] + "\n"
         if len(items) != 0:
-            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description=f"```{weapons}```", color=discord.Colour.blue())
+            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description="", color=discord.Colour.blue())
+            embed.add_field(name=f"{specials.value}のブキ一覧", value=f"```{weapons}```")
         else:
             embed = discord.Embed(title=f"ブキが見つかりました", description=f"{specials.value}で検索した結果、このスペシャルのブキは見つかりませんでした", color=discord.Colour.red())
         await ctx.followup.send(embed=embed)
