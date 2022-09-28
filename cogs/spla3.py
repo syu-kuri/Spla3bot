@@ -69,8 +69,9 @@ class Spla3Cog(Cog):
                         embed.add_field(name="トリカラステージ", value=f"```{data[6]}```", inline=False)
                         embed.set_thumbnail(url=get_rule_image(data[4]))
                         embed.set_image(url=data[7])
+                        await ctx.followup.send(embed=embed)
                     else:
-                        img = get_concat_h_cut(data[5][0], data[5][1])
+                        img = get_concat_h_cut(data[7][0], data[7][1])
                         img_binary = io.BytesIO()
                         img.save(img_binary, format='PNG')
                         img_binary.seek(0)
@@ -82,6 +83,7 @@ class Spla3Cog(Cog):
                         embed.add_field(name="トリカラステージ", value=f"```現在トリカラは開催されていません```", inline=False)
                         embed.set_thumbnail(url=get_rule_image(data[4]))
                         embed.set_image(url="attachment://image.png")
+                        await ctx.followup.send(embed=embed, file=file)
                 else:
                     img = get_concat_h_cut(data[5][0], data[5][1])
                     img_binary = io.BytesIO()
@@ -94,6 +96,7 @@ class Spla3Cog(Cog):
                     embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
                     embed.set_thumbnail(url=get_rule_image(data[3]))
                     embed.set_image(url="attachment://image.png")
+                    await ctx.followup.send(embed=embed, file=file)
             else:
                 weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
 
@@ -103,6 +106,7 @@ class Spla3Cog(Cog):
                 embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
                 embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
                 embed.set_image(url=data[3])
+                await ctx.followup.send(embed=embed)
         else:
             data = spla3(rules.value, "now")
             if rules.name in not_coop:
@@ -114,8 +118,9 @@ class Spla3Cog(Cog):
                         embed.add_field(name="トリカラステージ", value=f"```{data[6]}```", inline=False)
                         embed.set_thumbnail(url=get_rule_image(data[4]))
                         embed.set_image(url=data[7])
+                        await ctx.followup.send(embed=embed)
                     else:
-                        img = get_concat_h_cut(data[5][0], data[5][1])
+                        img = get_concat_h_cut(data[7][0], data[7][1])
                         img_binary = io.BytesIO()
                         img.save(img_binary, format='PNG')
                         img_binary.seek(0)
@@ -127,6 +132,7 @@ class Spla3Cog(Cog):
                         embed.add_field(name="トリカラステージ", value=f"```現在トリカラは開催されていません```", inline=False)
                         embed.set_thumbnail(url=get_rule_image(data[4]))
                         embed.set_image(url="attachment://image.png")
+                        await ctx.followup.send(embed=embed, file=file)
                 else:
                     img = get_concat_h_cut(data[5][0], data[5][1])
                     img_binary = io.BytesIO()
@@ -139,6 +145,7 @@ class Spla3Cog(Cog):
                     embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
                     embed.set_thumbnail(url=get_rule_image(data[3]))
                     embed.set_image(url="attachment://image.png")
+                    await ctx.followup.send(embed=embed, file=file)
             else:
                 weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
 
@@ -148,10 +155,7 @@ class Spla3Cog(Cog):
                 embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
                 embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
                 embed.set_image(url=data[3])
-        if file:
-            await ctx.followup.send(embed=embed, file=file)
-        else:
-            await ctx.followup.send(embed=embed)
+                await ctx.followup.send(embed=embed)
 
 
     @app_commands.command(
