@@ -42,6 +42,7 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 
 ## Example of command execution
 <div align="center">
+  <img src="../docs/img/example5.png" width="400"/>
   <img src="../docs/img/example2.png" width="400"/>
   <img src="../docs/img/example3.png" width="400"/>
   <img src="../docs/img/example4.png" width="400"/>
