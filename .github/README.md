@@ -36,10 +36,15 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 ### Random select weapon
 * `weapon` ... Returns a random selection of one from all the weapons.
 
+### Search weapon from sub weapon or special
+* `sub [sub-weapon-name]` ... Returns a list of weapons matched from the selected sub weapon.
+* `special [special-name]` ... Returns a list of weapons matched by the selected special.
+
 ## Example of command execution
 <div align="center">
   <img src="../docs/img/example2.png" width="400"/>
   <img src="../docs/img/example3.png" width="400"/>
+  <img src="../docs/img/example4.png" width="400"/>
 </div>
 
 ## Future Progress
