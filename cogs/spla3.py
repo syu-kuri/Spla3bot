@@ -1,3 +1,4 @@
+import io
 from typing import Optional
 import json
 import random
@@ -69,16 +70,30 @@ class Spla3Cog(Cog):
                         embed.set_thumbnail(url=get_rule_image(data[4]))
                         embed.set_image(url=data[7])
                     else:
+                        img = get_concat_h_cut(data[5][0], data[5][1])
+                        img_binary = io.BytesIO()
+                        img.save(img_binary, format='PNG')
+                        img_binary.seek(0)
+                        file = discord.File(img_binary, filename='image.png')
+
                         embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", description="", color=get_rule_color(data[4]))
                         embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
                         embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
                         embed.add_field(name="トリカラステージ", value=f"```現在トリカラは開催されていません```", inline=False)
                         embed.set_thumbnail(url=get_rule_image(data[4]))
+                        embed.set_image(url="attachment://image.png")
                 else:
+                    img = get_concat_h_cut(data[5][0], data[5][1])
+                    img_binary = io.BytesIO()
+                    img.save(img_binary, format='PNG')
+                    img_binary.seek(0)
+                    file = discord.File(img_binary, filename='image.png')
+
                     embed = discord.Embed(title=f"splatoon3 ステージ情報 | {data[3]}", description="", color=get_rule_color(data[3]))
                     embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
                     embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
                     embed.set_thumbnail(url=get_rule_image(data[3]))
+                    embed.set_image(url="attachment://image.png")
             else:
                 weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
 
@@ -100,16 +115,30 @@ class Spla3Cog(Cog):
                         embed.set_thumbnail(url=get_rule_image(data[4]))
                         embed.set_image(url=data[7])
                     else:
+                        img = get_concat_h_cut(data[5][0], data[5][1])
+                        img_binary = io.BytesIO()
+                        img.save(img_binary, format='PNG')
+                        img_binary.seek(0)
+                        file = discord.File(img_binary, filename='image.png')
+
                         embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", description="", color=get_rule_color(data[4]))
                         embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
                         embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
                         embed.add_field(name="トリカラステージ", value=f"```現在トリカラは開催されていません```", inline=False)
                         embed.set_thumbnail(url=get_rule_image(data[4]))
+                        embed.set_image(url="attachment://image.png")
                 else:
+                    img = get_concat_h_cut(data[5][0], data[5][1])
+                    img_binary = io.BytesIO()
+                    img.save(img_binary, format='PNG')
+                    img_binary.seek(0)
+                    file = discord.File(img_binary, filename='image.png')
+
                     embed = discord.Embed(title=f"splatoon3 ステージ情報 | {data[3]}", description="", color=get_rule_color(data[3]))
                     embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
                     embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
                     embed.set_thumbnail(url=get_rule_image(data[3]))
+                    embed.set_image(url="attachment://image.png")
             else:
                 weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
 
@@ -119,7 +148,10 @@ class Spla3Cog(Cog):
                 embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
                 embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
                 embed.set_image(url=data[3])
-        await ctx.followup.send(embed=embed)
+        if file:
+            await ctx.followup.send(embed=embed, file=file)
+        else:
+            await ctx.followup.send(embed=embed)
 
 
     @app_commands.command(
