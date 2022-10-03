@@ -23,7 +23,9 @@ class Spla3Bot(commands.Bot):
         )
 
     async def on_ready(self):
-        presence = discord.Game(f"{prefix}help")
+        count_guilds = len(self.guilds)
+        count_users = len(self.users)
+        presence = discord.Game(f"{prefix}help | {str(count_guilds)}guilds | {str(count_users)}users")
         await self.change_presence(activity=presence)
         print("ログインしました")
         print('----------------')
