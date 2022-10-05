@@ -7,11 +7,6 @@ from discord.ext import commands
 from lib.config import *
 from lib.discord import *
 
-extensions = [
-    'cogs.admin',
-    'cogs.error',
-    'cogs.spla3',
-]
 
 class Spla3Bot(commands.Bot):
     def __init__(self):
@@ -33,11 +28,17 @@ class Spla3Bot(commands.Bot):
     async def setup_hook(self):
         await self.tree.sync()
 
-
 async def main():
     bot = Spla3Bot()
-    for extension in extensions:
-        await bot.load_extension(extension)
+    for file in os.listdir(f"./cogs"):
+        if file.endswith(".py"):
+            extension = file[:-3]
+            try:
+                await bot.load_extension(f"cogs.{extension}")
+                print(f"Loaded extension '{extension}'")
+            except Exception as e:
+                exception = f"{type(e).__name__}: {e}"
+                print(f"Failed to load extension {extension}\n{exception}")
 
     await bot.start(token)
 

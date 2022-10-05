@@ -18,9 +18,9 @@ class AdminCog(Cog, name="Bot製作者のみ使用可能コマンド"):
     @commands.command(name="get_error", hidden=True)
     @commands.is_owner()
     async def get_error(self, ctx, error_id):
-        ch = error_ch
+        ch = int(error_ch)
         channel = self.bot.get_channel(ch)
-        msg = await channel.fetch_message(error_id)
+        msg = await channel.fetch_message(int(error_id))
         embeds = msg.embeds
         for embed in embeds:
             dict = embed.to_dict()
