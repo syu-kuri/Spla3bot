@@ -51,6 +51,6 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 ## Future Progress
 * ~~Support for Salmon Run information after API support~~
 * ~~Add random weapon selection~~
+* ~~Add stage image~~
 * Get all stage information
-* Add stage image
 * 4 vs. 4 teaming
