@@ -10,7 +10,7 @@
 </p>
 
 
-This is a Discord Bot that returns Splatoon 3 stage information by either Mention, Slash Command, or Command.
+This is a Discord Bot that returns Splatoon 3 stage information by Slash Command.
 
 This bot uses the API of [Spla3 API](https://spla3.yuu26.com/) produced by Emuon to get information.
 
@@ -51,6 +51,6 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 ## Future Progress
 * ~~Support for Salmon Run information after API support~~
 * ~~Add random weapon selection~~
+* ~~Add stage image~~
 * Get all stage information
-* Add stage image
 * 4 vs. 4 teaming
