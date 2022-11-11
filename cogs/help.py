@@ -36,6 +36,10 @@ class HelpCog(Cog):
         embed.add_field(name="/sub [サブウェポン名]", value="```選択したサブウェポンのブキを検索して表示します```", inline=False)
         embed.add_field(name="/special [スペシャル名]", value="```選択したスペシャルのブキを検索して表示します```", inline=False)
         embed.add_field(name="/info", value="```Botの情報を表示します```", inline=False)
+        embed.add_field(name="/register [フレンドコード]", value="```あなたのフレンドコードを登録します```", inline=False)
+        embed.add_field(name="/search [ユーザー]", value="```選択したユーザーのフレンドコードを表示します```", inline=False)
+        embed.add_field(name="/update [フレンドコード]", value="```あなたのフレンドコードを更新します```", inline=False)
+        embed.add_field(name="/delete", value="```あなたのフレンドコードを削除します```", inline=False)
 
         await ctx.followup.send(embed=embed, view=view)
 

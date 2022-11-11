@@ -91,8 +91,9 @@ class Spla3Cog(Cog):
                     img_binary.seek(0)
                     file = discord.File(img_binary, filename='image.png')
 
-                    embed = discord.Embed(title=f"splatoon3 ステージ情報 | {data[3]}", description="", color=get_rule_color(data[3]))
+                    embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(data[3]))
                     embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
+                    embed.add_field(name="ルール", value=f"```{data[3]}```", inline=False)
                     embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
                     embed.set_thumbnail(url=get_rule_image(data[3]))
                     embed.set_image(url="attachment://image.png")
@@ -100,11 +101,11 @@ class Spla3Cog(Cog):
             else:
                 weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
 
-                embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン", description="", color=get_rule_color("サーモンラン"))
+                embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(rules.name))
                 embed.add_field(name="開催時間", value=f"```{data[0]} ～ {data[1]}```", inline=False)
                 embed.add_field(name="ステージ", value=f"```{data[2]}```", inline=False)
                 embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
+                embed.set_thumbnail(url=f"{get_rule_image(rules.name)}")
                 embed.set_image(url=data[3])
                 await ctx.followup.send(embed=embed)
         else:
@@ -140,8 +141,9 @@ class Spla3Cog(Cog):
                     img_binary.seek(0)
                     file = discord.File(img_binary, filename='image.png')
 
-                    embed = discord.Embed(title=f"splatoon3 ステージ情報 | {data[3]}", description="", color=get_rule_color(data[3]))
+                    embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(data[3]))
                     embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
+                    embed.add_field(name="ルール", value=f"```{data[3]}```", inline=False)
                     embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
                     embed.set_thumbnail(url=get_rule_image(data[3]))
                     embed.set_image(url="attachment://image.png")
@@ -149,11 +151,11 @@ class Spla3Cog(Cog):
             else:
                 weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
 
-                embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン", description="", color=get_rule_color("サーモンラン"))
+                embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(rules.name))
                 embed.add_field(name="開催時間", value=f"```{data[0]} ～ {data[1]}```", inline=False)
                 embed.add_field(name="ステージ", value=f"```{data[2]}```", inline=False)
                 embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
+                embed.set_thumbnail(url=f"{get_rule_image(rules.name)}")
                 embed.set_image(url=data[3])
                 await ctx.followup.send(embed=embed)
 
