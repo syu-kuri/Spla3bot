@@ -26,7 +26,7 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 
 **Slash Command**
 ```
-/stage [rule] Option[time]
+/commandName Optional[arguments]
 ```
 
 ## List of commands
