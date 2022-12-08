@@ -26,12 +26,13 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 
 **Slash Command**
 ```
-/stage [rule] Option[time]
+/commandName Optional[arguments]
 ```
 
 ## List of commands
 ### View stage information
 * `stage [rule] Option[time]` ... Returns stage information for the selected rule and time.
+* `bankara Option[time]` ... Returns two modes of banca match.
 
 ### Random select weapon
 * `weapon` ... Returns a random selection of one from all the weapons.
@@ -39,6 +40,12 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 ### Search weapon from sub weapon or special
 * `sub [sub-weapon-name]` ... Returns a list of weapons matched from the selected sub weapon.
 * `special [special-name]` ... Returns a list of weapons matched by the selected special.
+
+### Switch Friend Code
+* `register [friend-code]` ... Register your friend code.
+* `update [friend-code]` ... Update your friend code.
+* `delete` ... Delete your friend code.
+* `search [user]` ... Returns the friend code of the specified person.
 
 ## Example of command execution
 <div align="center">
