@@ -24,6 +24,7 @@ def common_molding(f):
 def common_coop_molding(f):
     st = f["start_time"]
     et = f["end_time"]
+    is_big_run = f["is_big_run"]
     stage = f["stage"]["name"]
     image = f["stage"]["image"]
 
@@ -34,7 +35,7 @@ def common_coop_molding(f):
     for weapon in f["weapons"]:
         weapons.append(weapon["name"])
 
-    return[start_time, end_time, stage, image, weapons]
+    return[is_big_run, start_time, end_time, stage, image, weapons]
 
 
 def fest_molding(f):

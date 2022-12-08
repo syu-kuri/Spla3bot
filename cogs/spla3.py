@@ -48,7 +48,8 @@ class Spla3Cog(Cog):
             app_commands.Choice(name='ナワバリ', value="regular"),
             app_commands.Choice(name='バンカラ(チャレンジ)', value="bankara-challenge"),
             app_commands.Choice(name='バンカラ(オープン)', value="bankara-open"),
-            app_commands.Choice(name='サーモンラン', value="coop-grouping-regular"),
+            app_commands.Choice(name='Xマッチ', value="x"),
+            app_commands.Choice(name='サーモンラン', value="coop-grouping"),
         ],
         tz=[
             app_commands.Choice(name='現在', value="now"),
@@ -56,7 +57,7 @@ class Spla3Cog(Cog):
         ]
     )
     async def stage3(self, ctx: discord.Interaction, rules: app_commands.Choice[str], tz: Optional[app_commands.Choice[str]]):
-        not_coop = ["ナワバリ", "バンカラ(チャレンジ)", "バンカラ(オープン)"]
+        not_coop = ["ナワバリ", "バンカラ(チャレンジ)", "バンカラ(オープン)", "Xマッチ"]
         await ctx.response.defer()
         if tz is not None:
             data = spla3(rules.value, tz.value)
@@ -99,15 +100,26 @@ class Spla3Cog(Cog):
                     embed.set_image(url="attachment://image.png")
                     await ctx.followup.send(embed=embed, file=file)
             else:
-                weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
+                if data[0]:
+                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
 
-                embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(rules.name))
-                embed.add_field(name="開催時間", value=f"```{data[0]} ～ {data[1]}```", inline=False)
-                embed.add_field(name="ステージ", value=f"```{data[2]}```", inline=False)
-                embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                embed.set_thumbnail(url=f"{get_rule_image(rules.name)}")
-                embed.set_image(url=data[3])
-                await ctx.followup.send(embed=embed)
+                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン ビッグラン中", description="", color=get_rule_color("サーモンラン"))
+                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
+                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
+                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
+                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
+                    embed.set_image(url=data[4])
+                    await ctx.followup.send(embed=embed)
+                else:
+                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
+
+                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン", description="", color=get_rule_color("サーモンラン"))
+                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
+                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
+                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
+                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
+                    embed.set_image(url=data[4])
+                    await ctx.followup.send(embed=embed)
         else:
             data = spla3(rules.value, "now")
             if rules.name in not_coop:
@@ -149,15 +161,26 @@ class Spla3Cog(Cog):
                     embed.set_image(url="attachment://image.png")
                     await ctx.followup.send(embed=embed, file=file)
             else:
-                weapons = f"{data[4][0]}\n{data[4][1]}\n{data[4][2]}\n{data[4][3]}"
+                if data[0]:
+                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
 
-                embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(rules.name))
-                embed.add_field(name="開催時間", value=f"```{data[0]} ～ {data[1]}```", inline=False)
-                embed.add_field(name="ステージ", value=f"```{data[2]}```", inline=False)
-                embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                embed.set_thumbnail(url=f"{get_rule_image(rules.name)}")
-                embed.set_image(url=data[3])
-                await ctx.followup.send(embed=embed)
+                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン ビッグラン中", description="", color=get_rule_color("サーモンラン"))
+                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
+                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
+                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
+                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
+                    embed.set_image(url=data[4])
+                    await ctx.followup.send(embed=embed)
+                else:
+                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
+
+                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン", description="", color=get_rule_color("サーモンラン"))
+                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
+                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
+                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
+                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
+                    embed.set_image(url=data[4])
+                    await ctx.followup.send(embed=embed)
 
 
     @app_commands.command(
