@@ -31,8 +31,8 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 
 ## List of commands
 ### View stage information
-* `stage [rule] Option[time]` ... Returns stage information for the selected rule and time.
-* `bankara Option[time]` ... Returns two modes of banca match.
+* `stage [rule] Optional[time]` ... Returns stage information for the selected rule and time.
+* `bankara Optional[time]` ... Returns two modes of banca match.
 
 ### Random select weapon
 * `weapon` ... Returns a random selection of one from all the weapons.
