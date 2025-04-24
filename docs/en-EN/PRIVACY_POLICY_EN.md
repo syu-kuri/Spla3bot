@@ -7,4 +7,3 @@ We will not use this information for any other purpose than to respond to your i
 ## About Discord Bot
 Our Discord Bot uses [Splatoon 3 API](https://spla3.yuu26.com/), which is distributed by a third party, to obtain stage information.
 Please note that the bot may not work in some cases due to API malfunctions. Please be aware of this beforehand.
-

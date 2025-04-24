@@ -1,36 +1,50 @@
 import asyncio
-import asyncpg
+import logging
+import os
+import sys
 
 from bot import Spla3Bot
-from lib.config import *
-from lib.discord import *
+from config.config import TOKEN, Log_Format
+from constants.message import Messages
+from utils.log_util import LogUtil
+
 
 async def main():
-    database = await asyncpg.create_pool(db_url, max_size=1, min_size=1)
-    await database.execute('''
-        CREATE TABLE IF NOT EXISTS users(
-            id serial PRIMARY KEY,
-            user_id text unique,
-            friend_code text NOT NULL
-        );
-    ''')
-    bot = Spla3Bot(database=database)
-    for file in os.listdir(f"./cogs"):
-        if file.endswith(".py"):
+    bot = Spla3Bot()
+
+    for file in os.listdir(f'./cogs'):
+        if file == '__init__.py':
+            continue
+
+        if file.endswith('.py'):
             extension = file[:-3]
             try:
-                await bot.load_extension(f"cogs.{extension}")
-                print(f"Loaded extension '{extension}'")
+                await bot.load_extension(f'cogs.{extension}')
+                LogUtil.info(Messages.BI0000000002.format(extension))
             except Exception as e:
-                exception = f"{type(e).__name__}: {e}"
-                print(f"Failed to load extension {extension}\n{exception}")
+                LogUtil.exception(Messages.BW0000000003.format(e))
 
     try:
-        await bot.start(token)
-    except KeyboardInterrupt:
-        await database.close()
-        await bot.logout()
+        await bot.start(TOKEN)
+    except Exception as e:
+        LogUtil.exception(Messages.BE0000000001.format(e))
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        handlers=[
+            logging.FileHandler(
+                filename='logs/app.log',
+                encoding='utf-8',
+                mode='a'
+            ),
+            logging.StreamHandler(
+                stream=sys.stdout,
+            )
+        ],
+        format=Log_Format,
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+
     asyncio.run(main())
