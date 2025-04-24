@@ -36,9 +36,6 @@ class Spla3Util:
             status_code = res.status_code
 
             if status_code == StatusCode.SUCCESS:
-                # SCCESS
-                LogUtil.info(APIMessage.AI0000000001)
-
                 if 'results' in res.json():
                     return res.json()['results']
                 elif 'result' in res.json():

@@ -24,7 +24,6 @@ class APIMessage:
     Fetch API Message
     """
     # INFO
-    AI0000000001 = "[AI0000000001]APIリクエストが正常に完了しました。"
 
     # WARNING
     AW0000000001 = "[AW0000000001]APIリクエストが正常に完了しませんでした。status_code:{}"

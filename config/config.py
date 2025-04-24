@@ -15,6 +15,7 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
+# Common
 BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 # Bot Infomation
@@ -29,8 +30,6 @@ CREATOR_NAME = os.environ.get('CREATOR_NAME', 'syukuri')
 # Discord
 TOKEN = os.environ.get('TOKEN', '')
 PREFIX = os.environ.get('PREFIX', '!')
-TEST_GUILDS = os.environ.get('test_guilds')
-ERROR_CH = os.environ.get('ERROR_CH')
 
 # API
 SPLA3_BASE_URL = 'https://spla3.yuu26.com/api/'
