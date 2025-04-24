@@ -1,28 +1,29 @@
+from typing import Self
+
 import discord
 import discord.app_commands
 from discord.ext import commands
 
-from lib.config import *
-from lib.discord import *
+from config.config import PREFIX
+from constants.message import Messages
+from utils.log_util import LogUtil
 
 
 class Spla3Bot(commands.Bot):
-    def __init__(self, **kwargs):
-        self.database = kwargs.pop('database')
-        intents=discord.Intents.default()
+    def __init__(self: Self):
+        intents=discord.Intents.all()
         super(Spla3Bot, self).__init__(
-            command_prefix=commands.when_mentioned_or(prefix),
+            command_prefix=commands.when_mentioned_or(PREFIX),
             intents=intents,
             help_command=None
         )
 
-    async def on_ready(self):
+    async def on_ready(self: Self):
         count_guilds = len(self.guilds)
-        count_users = len(self.users)
-        presence = discord.Game(f"/help | {str(count_guilds)}guilds | {str(count_users)}users")
+        presence = discord.Game(f"/help | {str(count_guilds)}guilds")
         await self.change_presence(activity=presence)
-        print("ログインしました")
-        print('----------------')
+        LogUtil.info(Messages.BI0000000001)
 
-    async def setup_hook(self):
-        await self.tree.sync()
+    async def setup_hook(self: Self):
+        # await self.tree.sync()
+        await self.tree.sync(guild=discord.Object(id=808959433010577439))

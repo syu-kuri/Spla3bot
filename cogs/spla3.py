@@ -1,261 +1,187 @@
+import datetime
 import io
-from typing import Optional
-import json
-import random
-import sys
-sys.path.append("../src/")
+from typing import Self
 
 import discord
 from discord import app_commands
 from discord.ext import commands
-from discord.ext.commands import Cog
 
-from lib.config import *
-from lib.spla_func import *
-from lib.img import *
-from lib.color import *
-from lib.text import *
-
-from src.weapons3_list import *
+from config.config import SPLA3_BASE_URL
+from constants.common import EmbedColor
+from utils.spla3_utils import Spla3Util
+from utils.image_util import ImageUtil
+from utils.pagination_util import PaginationUtil
 
 
-class Spla3Cog(Cog):
-    def __init__(self, bot: commands.Bot) -> None:
+class Spla3Cog(commands.Cog):
+    def __init__(self: Self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    async def sp_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-        target_str = hiraToKata(current)
-        return [
-            app_commands.Choice(name=buki_name, value=buki_name)
-            for buki_name in special_list if target_str in buki_name
-        ]
-
-    async def sub_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-        target_str = hiraToKata(current)
-        return [
-            app_commands.Choice(name=buki_name, value=buki_name)
-            for buki_name in sub_list if target_str in buki_name
-        ]
-
     @app_commands.command(
-        name="stage",
-        description="スプラトゥーン3のステージ情報を表示します"
+        name='stage',
+        description='スプラトゥーン3のステージ情報を表示します。',
     )
-    @app_commands.describe(rules="ルールを選択してください", tz="時間帯を選択してください")
-    @app_commands.rename(rules="ルール", tz="時間帯")
+    @app_commands.describe(match='ルールを選択してください', time='時間帯を選択してください')
+    @app_commands.rename(match='ルール', time='時間帯')
     @app_commands.choices(
-        rules=[
-            app_commands.Choice(name='ナワバリ', value="regular"),
-            app_commands.Choice(name='バンカラ(チャレンジ)', value="bankara-challenge"),
-            app_commands.Choice(name='バンカラ(オープン)', value="bankara-open"),
-            app_commands.Choice(name='Xマッチ', value="x"),
-            app_commands.Choice(name='サーモンラン', value="coop-grouping"),
+        match=[
+            app_commands.Choice(name='ナワバリバトル', value='regular'),
+            app_commands.Choice(name='バンカラマッチ(チャレンジ)', value='bankara-challenge'),
+            app_commands.Choice(name='バンカラマッチ(オープン)', value='bankara-open'),
+            app_commands.Choice(name='Xマッチ', value='x'),
         ],
-        tz=[
-            app_commands.Choice(name='現在', value="now"),
-            app_commands.Choice(name='次', value="next"),
+        time=[
+            app_commands.Choice(name='現在', value='now'),
+            app_commands.Choice(name='次', value='next'),
+            app_commands.Choice(name='スケジュール', value='schedule'),
         ]
     )
-    async def stage3(self, ctx: discord.Interaction, rules: app_commands.Choice[str], tz: Optional[app_commands.Choice[str]]):
-        not_coop = ["ナワバリ", "バンカラ(チャレンジ)", "バンカラ(オープン)", "Xマッチ"]
-        await ctx.response.defer()
-        if tz is not None:
-            data = spla3(rules.value, tz.value)
-            if rules.name in not_coop:
-                if data[0]:
-                    if data[1]:
-                        embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", description="", color=get_rule_color(data[4]))
-                        embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
-                        embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
-                        embed.add_field(name="トリカラステージ", value=f"```{data[6]}```", inline=False)
-                        embed.set_thumbnail(url=get_rule_image(data[4]))
-                        embed.set_image(url=data[7])
-                        await ctx.followup.send(embed=embed)
-                    else:
-                        img = get_concat_h_cut(data[7][0], data[7][1])
-                        img_binary = io.BytesIO()
-                        img.save(img_binary, format='PNG')
-                        img_binary.seek(0)
-                        file = discord.File(img_binary, filename='image.png')
+    @app_commands.guilds(discord.Object(id=808959433010577439))
+    async def stage3(self: Self, interaction: discord.Interaction, match: app_commands.Choice[str], time: app_commands.Choice[str]) -> None:
+        await interaction.response.defer()
+        request_url = SPLA3_BASE_URL + match.value + '/' + time.value
 
-                        embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", description="", color=get_rule_color(data[4]))
-                        embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
-                        embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
-                        embed.add_field(name="トリカラステージ", value=f"```現在トリカラは開催されていません```", inline=False)
-                        embed.set_thumbnail(url=get_rule_image(data[4]))
-                        embed.set_image(url="attachment://image.png")
-                        await ctx.followup.send(embed=embed, file=file)
-                else:
-                    img = get_concat_h_cut(data[5][0], data[5][1])
-                    img_binary = io.BytesIO()
-                    img.save(img_binary, format='PNG')
-                    img_binary.seek(0)
-                    file = discord.File(img_binary, filename='image.png')
+        spla3_util = Spla3Util()
+        res = spla3_util.fetch_schedule(request_url)
 
-                    embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(data[3]))
-                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-                    embed.add_field(name="ルール", value=f"```{data[3]}```", inline=False)
-                    embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
-                    embed.set_thumbnail(url=get_rule_image(data[3]))
-                    embed.set_image(url="attachment://image.png")
-                    await ctx.followup.send(embed=embed, file=file)
+        if len(res) == 0:
+            embed = discord.Embed(title='データ取得失敗', description='データの取得に失敗しました。\n時間を空けて再度実行してください。\n改善されない場合はお問い合わせください。', colour=discord.Colour.red())
+            return await interaction.followup.send(embed=embed)
+
+        if time.value == 'now' or time.value == 'next':
+            result = res[0]
+            start_date = datetime.datetime.strptime(result['start_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+            end_date = datetime.datetime.strptime(result['end_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+
+            # check fest
+            if result['is_fest']:
+                embed = discord.Embed(title='splatoon3 ステージ情報 | フェス開催中', description='フェスマッチの情報は`/fes`で取得できます。', color=EmbedColor.IS_FEST)
+                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                return await interaction.followup.send(embed=embed)
             else:
-                if data[0]:
-                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
+                stages = result['stages']
 
-                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン ビッグラン中", description="", color=get_rule_color("サーモンラン"))
-                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
-                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
-                    embed.set_image(url=data[4])
-                    await ctx.followup.send(embed=embed)
+                # generate stage image
+                img = ImageUtil.gen_image_by_url(url1=stages[0]['image'], url2=stages[1]['image'])
+                img_binary = io.BytesIO()
+                img.save(img_binary, format='PNG')
+                img_binary.seek(0)
+
+                # discord File
+                file = discord.File(img_binary, filename='image.png')
+
+                embed = discord.Embed(title='splatoon3 ステージ情報 | {}'.format(match.name), description='', color=EmbedColor.LIST.get(result['rule']['key']))
+                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+
+                if match.value != 'regular':
+                    embed.add_field(name='ルール', value='```{}```'.format(result['rule']['name']), inline=False)
+
+                embed.add_field(name='ステージ', value='```{}\n{}```'.format(stages[0]['name'], stages[1]['name']), inline=False)
+                embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                embed.set_image(url='attachment://image.png')
+                return await interaction.followup.send(embed=embed, file=file)
+        elif time.value == 'schedule':
+            pages = []
+            images = []
+
+            for i, result in enumerate(res):
+                start_date = datetime.datetime.strptime(result['start_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+                end_date = datetime.datetime.strptime(result['end_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+
+                # check fest
+                if result['is_fest']:
+                    embed = discord.Embed(title='splatoon3 ステージ情報 | フェス開催中', description='フェスマッチの情報は`/fes`で取得できます。', color=EmbedColor.IS_FEST)
+                    embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                    pages.append(embed)
                 else:
-                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
+                    stages = result['stages']
 
-                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン", description="", color=get_rule_color("サーモンラン"))
-                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
-                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
-                    embed.set_image(url=data[4])
-                    await ctx.followup.send(embed=embed)
-        else:
-            data = spla3(rules.value, "now")
-            if rules.name in not_coop:
-                if data[0]:
-                    if data[1]:
-                        embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", description="", color=get_rule_color(data[4]))
-                        embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
-                        embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
-                        embed.add_field(name="トリカラステージ", value=f"```{data[6]}```", inline=False)
-                        embed.set_thumbnail(url=get_rule_image(data[4]))
-                        embed.set_image(url=data[7])
-                        await ctx.followup.send(embed=embed)
-                    else:
-                        img = get_concat_h_cut(data[7][0], data[7][1])
-                        img_binary = io.BytesIO()
-                        img.save(img_binary, format='PNG')
-                        img_binary.seek(0)
-                        file = discord.File(img_binary, filename='image.png')
+                    embed = discord.Embed(title='splatoon3 ステージ情報 | {}'.format(match.name), description='', color=EmbedColor.LIST.get(result['rule']['key']))
+                    embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
 
-                        embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", description="", color=get_rule_color(data[4]))
-                        embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
-                        embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
-                        embed.add_field(name="トリカラステージ", value=f"```現在トリカラは開催されていません```", inline=False)
-                        embed.set_thumbnail(url=get_rule_image(data[4]))
-                        embed.set_image(url="attachment://image.png")
-                        await ctx.followup.send(embed=embed, file=file)
-                else:
-                    img = get_concat_h_cut(data[5][0], data[5][1])
-                    img_binary = io.BytesIO()
-                    img.save(img_binary, format='PNG')
-                    img_binary.seek(0)
-                    file = discord.File(img_binary, filename='image.png')
+                    if match.value != 'regular':
+                        embed.add_field(name='ルール', value='```{}```'.format(result['rule']['name']), inline=False)
 
-                    embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rules.name}", description="", color=get_rule_color(data[3]))
-                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-                    embed.add_field(name="ルール", value=f"```{data[3]}```", inline=False)
-                    embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
-                    embed.set_thumbnail(url=get_rule_image(data[3]))
-                    embed.set_image(url="attachment://image.png")
-                    await ctx.followup.send(embed=embed, file=file)
+                    embed.add_field(name='ステージ', value='```{}\n{}```'.format(stages[0]['name'], stages[1]['name']), inline=False)
+                    embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+
+                    pages.append(embed)
+                    images.append([stages[0]['image'], stages[1]['image']])
+
+            return await PaginationUtil.start(interaction=interaction, match=match.value, embeds=pages, images=images)
+
+    @app_commands.command(
+        name='coop',
+        description='スプラトゥーン3のサーモンラン情報を表示します。',
+    )
+    @app_commands.describe(time='時間帯を選択してください')
+    @app_commands.rename(time='時間帯')
+    @app_commands.choices(
+        time=[
+            app_commands.Choice(name='現在', value='now'),
+            app_commands.Choice(name='次', value='next'),
+            app_commands.Choice(name='スケジュール', value='schedule'),
+        ]
+    )
+    @app_commands.guilds(discord.Object(id=808959433010577439))
+    async def coop3(self: Self, interaction: discord.Interaction, time: app_commands.Choice[str]) -> None:
+        await interaction.response.defer()
+        request_url = SPLA3_BASE_URL + 'coop-grouping' + '/' + time.value
+
+        spla3_util = Spla3Util()
+        res = spla3_util.fetch_schedule(request_url)
+
+        if len(res) == 0:
+            embed = discord.Embed(title='データ取得失敗', description='データの取得に失敗しました。\n時間を空けて再度実行してください。\n改善されない場合はお問い合わせください。', colour=discord.Colour.red())
+            return await interaction.followup.send(embed=embed)
+
+        if time.value == 'now' or time.value == 'next':
+            result = res[0]
+            start_date = datetime.datetime.strptime(result['start_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+            end_date = datetime.datetime.strptime(result['end_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+
+            # check big run
+            if result['is_big_run']:
+                embed = discord.Embed(title='splatoon3 ステージ情報 | ビッグラン開催中', description='', color=EmbedColor.COOP)
+                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                return await interaction.followup.send(embed=embed)
             else:
-                if data[0]:
-                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
+                weapons = result['weapons']
 
-                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン ビッグラン中", description="", color=get_rule_color("サーモンラン"))
-                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
-                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
-                    embed.set_image(url=data[4])
-                    await ctx.followup.send(embed=embed)
+                embed = discord.Embed(title='splatoon3 ステージ情報 | サーモンラン', description='', color=EmbedColor.COOP)
+                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
+                embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
+                embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                embed.set_image(url=result['stage']['image'])
+                return await interaction.followup.send(embed=embed)
+        elif time.value == 'schedule':
+            pages = []
+            images = []
+
+            for i, result in enumerate(res):
+                start_date = datetime.datetime.strptime(result['start_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+                end_date = datetime.datetime.strptime(result['end_time'], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%d %H:%M')
+
+                # check big run
+                if result['is_big_run']:
+                    embed = discord.Embed(title='splatoon3 ステージ情報 | ビッグラン開催中', description='', color=EmbedColor.IS_FEST)
+                    embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                    pages.append(embed)
                 else:
-                    weapons = f"{data[5][0]}\n{data[5][1]}\n{data[5][2]}\n{data[5][3]}"
+                    weapons = result['weapons']
 
-                    embed = discord.Embed(title="splatoon3 ステージ情報 | サーモンラン", description="", color=get_rule_color("サーモンラン"))
-                    embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-                    embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
-                    embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
-                    embed.set_thumbnail(url=f"{get_rule_image('サーモンラン')}")
-                    embed.set_image(url=data[4])
-                    await ctx.followup.send(embed=embed)
+                    embed = discord.Embed(title='splatoon3 ステージ情報 | サーモンラン', description='', color=EmbedColor.COOP)
+                    embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                    embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
+                    embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
+                    embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                    embed.set_image(url=result['stage']['image'])
 
+                    pages.append(embed)
+                    images.append([result['stage']['image']])
 
-    @app_commands.command(
-        name="weapon",
-        description="ブキガチャを行います"
-    )
-    async def random_weapon(self, ctx: discord.Interaction):
-        await ctx.response.defer(ephemeral=True)
-        weapons3_file = "src/weapons3.json"
-        with open(weapons3_file, 'r', encoding="utf-8") as f:
-            json_datas = json.load(f)
-
-        _num = len(json_datas)
-        num = random.randint(0, _num - 1)
-        weapon_data = json_datas[num]
-
-        embed = discord.Embed(title=f"{ctx.user.name}のブキはこれだ！", description="", color=discord.Colour.yellow())
-        embed.add_field(name="ブキ名", value=f'```{weapon_data["name"]}```', inline=False)
-        embed.add_field(name="サブ", value=f'```{weapon_data["sub"]}```', inline=True)
-        embed.add_field(name="スペシャル", value=f'```{weapon_data["special"]}```', inline=True)
-        await ctx.followup.send(embed=embed, ephemeral=True)
-
-
-    @app_commands.command(
-        name="sub",
-        description="サブウェポンからブキを検索します"
-    )
-    @app_commands.describe(subs="検索するサブウェポンを選択してください")
-    @app_commands.rename(subs="サブウェポン")
-    @app_commands.autocomplete(subs=sub_autocomplete)
-    async def sub_weapon(self, ctx: discord.Interaction, subs: str):
-        await ctx.response.defer()
-        weapons3_file = "src/weapons3.json"
-        with open(weapons3_file, 'r', encoding="utf-8") as f:
-            json_datas = json.load(f)
-
-        items = []
-        weapons = ""
-        for i in range(len(json_datas)):
-            if json_datas[i]["sub"] == subs:
-                items.append(json_datas[i])
-        for i in range(len(items)):
-            weapons += items[i]["name"] + "\n"
-        if len(items) != 0:
-            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description=f"```{weapons}```", color=discord.Colour.blue())
-        else:
-            embed = discord.Embed(title=f"ブキが見つかりました", description=f"{subs}で検索した結果、このサブウェポンのブキは見つかりませんでした", color=discord.Colour.red())
-        await ctx.followup.send(embed=embed)
-
-
-    @app_commands.command(
-        name="special",
-        description="スペシャルからブキを検索します"
-    )
-    @app_commands.describe(specials="検索するスペシャルを選択してください")
-    @app_commands.rename(specials="スペシャル")
-    @app_commands.autocomplete(specials=sp_autocomplete)
-    async def special_weapon(self, ctx: discord.Interaction, specials: str):
-        await ctx.response.defer()
-        weapons3_file = "src/weapons3.json"
-        with open(weapons3_file, 'r', encoding="utf-8") as f:
-            json_datas = json.load(f)
-
-        items = []
-        weapons = ""
-        for i in range(len(json_datas)):
-            if json_datas[i]["special"] == specials:
-                items.append(json_datas[i])
-        for i in range(len(items)):
-            weapons += items[i]["name"] + "\n"
-        if len(items) != 0:
-            embed = discord.Embed(title=f"{len(items)}件のブキが見つかりました", description=f"```{weapons}```", color=discord.Colour.blue())
-        else:
-            embed = discord.Embed(title=f"ブキが見つかりました", description=f"{specials}で検索した結果、このスペシャルのブキは見つかりませんでした", color=discord.Colour.red())
-        await ctx.followup.send(embed=embed)
+            return await PaginationUtil.start(interaction=interaction, match='coop', embeds=pages, images=images)
 
 
 async def setup(bot: commands.Bot) -> None:
