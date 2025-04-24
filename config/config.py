@@ -15,6 +15,8 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+
 # Bot Infomation
 version_info: VersionInfo = VersionInfo(major=0, minor=0, micro=1, releaselevel='alpha', serial=0)
 

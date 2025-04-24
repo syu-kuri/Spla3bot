@@ -77,7 +77,7 @@ class Spla3Cog(commands.Cog):
                     embed.add_field(name='ルール', value='```{}```'.format(result['rule']['name']), inline=False)
 
                 embed.add_field(name='ステージ', value='```{}\n{}```'.format(stages[0]['name'], stages[1]['name']), inline=False)
-                embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                embed.set_thumbnail(url=spla3_util.get_match_logo_path(result['rule']['key']))
                 embed.set_image(url='attachment://image.png')
                 return await interaction.followup.send(embed=embed, file=file)
         elif time.value == 'schedule':
@@ -103,7 +103,7 @@ class Spla3Cog(commands.Cog):
                         embed.add_field(name='ルール', value='```{}```'.format(result['rule']['name']), inline=False)
 
                     embed.add_field(name='ステージ', value='```{}\n{}```'.format(stages[0]['name'], stages[1]['name']), inline=False)
-                    embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                    embed.set_thumbnail(url=spla3_util.get_match_logo_path(result['rule']['key']))
 
                     pages.append(embed)
                     images.append([stages[0]['image'], stages[1]['image']])
@@ -152,7 +152,7 @@ class Spla3Cog(commands.Cog):
                 embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
                 embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
                 embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
-                embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                embed.set_thumbnail(url=spla3_util.get_match_logo_path('COOP'))
                 embed.set_image(url=result['stage']['image'])
                 return await interaction.followup.send(embed=embed)
         elif time.value == 'schedule':
@@ -175,7 +175,7 @@ class Spla3Cog(commands.Cog):
                     embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
                     embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
                     embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
-                    embed.set_thumbnail(url='https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png')
+                    embed.set_thumbnail(url=spla3_util.get_match_logo_path('COOP'))
                     embed.set_image(url=result['stage']['image'])
 
                     pages.append(embed)

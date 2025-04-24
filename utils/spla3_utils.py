@@ -3,7 +3,7 @@ from typing import Dict
 import requests
 
 from config.config import USER_AGENT
-from constants.common import StatusCode
+from constants.common import StatusCode, MatchLogoPath
 from constants.message import APIMessage
 from utils.log_util import LogUtil
 
@@ -52,3 +52,7 @@ class Spla3Util:
             LogUtil.exception(APIMessage.AE0000000001.format(e))
 
             return {}
+
+    @classmethod
+    def get_match_logo_path(cls, mode: str) -> str:
+        return MatchLogoPath.LIST.get(mode)
