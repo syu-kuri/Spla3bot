@@ -57,6 +57,7 @@ class Spla3Cog(commands.Cog):
             if result['is_fest']:
                 embed = discord.Embed(title='splatoon3 ステージ情報 | フェス開催中', description='フェスマッチの情報は`/fes`で取得できます。', color=EmbedColor.IS_FEST)
                 embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+
                 return await interaction.followup.send(embed=embed)
             else:
                 stages = result['stages']
@@ -79,6 +80,7 @@ class Spla3Cog(commands.Cog):
                 embed.add_field(name='ステージ', value='```{}\n{}```'.format(stages[0]['name'], stages[1]['name']), inline=False)
                 embed.set_thumbnail(url=spla3_util.get_match_logo_path(result['rule']['key']))
                 embed.set_image(url='attachment://image.png')
+
                 return await interaction.followup.send(embed=embed, file=file)
         elif time.value == 'schedule':
             pages = []
@@ -93,6 +95,7 @@ class Spla3Cog(commands.Cog):
                     embed = discord.Embed(title='splatoon3 ステージ情報 | フェス開催中', description='フェスマッチの情報は`/fes`で取得できます。', color=EmbedColor.IS_FEST)
                     embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
                     pages.append(embed)
+                    images.append([None, None])
                 else:
                     stages = result['stages']
 
@@ -143,18 +146,17 @@ class Spla3Cog(commands.Cog):
             # check big run
             if result['is_big_run']:
                 embed = discord.Embed(title='splatoon3 ステージ情報 | ビッグラン開催中', description='', color=EmbedColor.COOP)
-                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
-                return await interaction.followup.send(embed=embed)
             else:
-                weapons = result['weapons']
-
                 embed = discord.Embed(title='splatoon3 ステージ情報 | サーモンラン', description='', color=EmbedColor.COOP)
-                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
-                embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
-                embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
-                embed.set_thumbnail(url=spla3_util.get_match_logo_path('COOP'))
-                embed.set_image(url=result['stage']['image'])
-                return await interaction.followup.send(embed=embed)
+
+            weapons = result['weapons']
+            embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+            embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
+            embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
+            embed.set_thumbnail(url=spla3_util.get_match_logo_path('COOP'))
+            embed.set_image(url=result['stage']['image'])
+
+            return await interaction.followup.send(embed=embed)
         elif time.value == 'schedule':
             pages = []
             images = []
@@ -166,20 +168,18 @@ class Spla3Cog(commands.Cog):
                 # check big run
                 if result['is_big_run']:
                     embed = discord.Embed(title='splatoon3 ステージ情報 | ビッグラン開催中', description='', color=EmbedColor.IS_FEST)
-                    embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
-                    pages.append(embed)
                 else:
-                    weapons = result['weapons']
-
                     embed = discord.Embed(title='splatoon3 ステージ情報 | サーモンラン', description='', color=EmbedColor.COOP)
-                    embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
-                    embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
-                    embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
-                    embed.set_thumbnail(url=spla3_util.get_match_logo_path('COOP'))
-                    embed.set_image(url=result['stage']['image'])
 
-                    pages.append(embed)
-                    images.append([result['stage']['image']])
+                weapons = result['weapons']
+                embed.add_field(name='開催期間', value='```{} ～ {}```'.format(start_date, end_date), inline=False)
+                embed.add_field(name='ステージ', value='```{}```'.format(result['stage']['name']), inline=False)
+                embed.add_field(name='支給ブキ', value='```{}\n{}\n{}\n{}```'.format(weapons[0]['name'], weapons[1]['name'], weapons[2]['name'], weapons[3]['name']), inline=False)
+                embed.set_thumbnail(url=spla3_util.get_match_logo_path('COOP'))
+                embed.set_image(url=result['stage']['image'])
+
+                pages.append(embed)
+                images.append([result['stage']['image']])
 
             return await PaginationUtil.start(interaction=interaction, match='coop', embeds=pages, images=images)
 

@@ -16,11 +16,13 @@ class PaginationView(discord.ui.View):
         self.total_page = len(embeds)
         self.update_buttons()
 
+
     def update_buttons(self: Self):
         self.first_page.disabled = self.current_page == 0
         self.prev_page.disabled = self.current_page == 0
         self.next_page.disabled = self.current_page == len(self.embeds) - 1
         self.last_page.disabled = self.current_page == len(self.embeds) - 1
+
 
     def gen_file(self: Self, embed: discord.Embed, image: List[Tuple[str, str]]) -> Tuple[discord.Embed, discord.File]:
         # generate stage image
@@ -35,6 +37,7 @@ class PaginationView(discord.ui.View):
         embed.set_image(url="attachment://image.png")
 
         return embed, file
+
 
     @discord.ui.button(emoji="⏮️", style=discord.ButtonStyle.grey)
     async def first_page(self: Self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -54,6 +57,7 @@ class PaginationView(discord.ui.View):
             await interaction.message.edit(embed=embed, view=self)
             await interaction.response.defer()
 
+
     @discord.ui.button(emoji="◀️", style=discord.ButtonStyle.grey)
     async def prev_page(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.current_page -= 1
@@ -72,9 +76,11 @@ class PaginationView(discord.ui.View):
             await interaction.message.edit(embed=embed, view=self)
             await interaction.response.defer()
 
+
     @discord.ui.button(emoji="❌", style=discord.ButtonStyle.grey)
     async def stop_pages(self: Self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.edit_message(view=None)
+
 
     @discord.ui.button(emoji="▶️", style=discord.ButtonStyle.grey)
     async def next_page(self: Self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -93,6 +99,7 @@ class PaginationView(discord.ui.View):
         elif self.match == 'coop':
             await interaction.message.edit(embed=embed, view=self)
             await interaction.response.defer()
+
 
     @discord.ui.button(emoji="⏭️", style=discord.ButtonStyle.grey)
     async def last_page(self: Self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -134,24 +141,18 @@ class PaginationUtil:
 
         view = PaginationView(match, embeds, images, timeout)
 
+        embed = embeds[0]
         image = images[0]
 
+        embed.set_footer(text="{}/{}".format(1, len(embeds)))
+
         if match in ['regular', 'bankara-challenge', 'bankara-open', 'x']:
-            # generate stage image
-            img = ImageUtil.gen_image_by_url(url1=image[0], url2=image[1])
-            img_binary = io.BytesIO()
-            img.save(img_binary, format='PNG')
-            img_binary.seek(0)
+            if (image[0] or image[1]) is None:
+                await interaction.followup.send(embed=embed, view=view)
+            else:
+                # generate stage image
+                embed, file = view.gen_file(embed=embed, image=image)
 
-            # discord File
-            file = discord.File(img_binary, filename='image.png')
-
-            embed = embeds[0]
-            embed.set_image(url="attachment://image.png")
-            embed.set_footer(text="{}/{}".format(1, len(embeds)))
-
-            await interaction.followup.send(embed=embed, file=file, view=view)
+                await interaction.followup.send(embed=embed, file=file, view=view)
         elif match == 'coop':
-            embed = embeds[0]
-            embed.set_footer(text="{}/{}".format(1, len(embeds)))
             await interaction.followup.send(embed=embed, view=view)
