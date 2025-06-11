@@ -36,7 +36,6 @@ class Spla3Cog(commands.Cog):
             app_commands.Choice(name='スケジュール', value='schedule'),
         ]
     )
-    @app_commands.guilds(discord.Object(id=808959433010577439))
     async def stage3(self: Self, interaction: discord.Interaction, match: app_commands.Choice[str], time: app_commands.Choice[str]) -> None:
         await interaction.response.defer()
         request_url = SPLA3_BASE_URL + match.value + '/' + time.value
@@ -126,7 +125,6 @@ class Spla3Cog(commands.Cog):
             app_commands.Choice(name='スケジュール', value='schedule'),
         ]
     )
-    @app_commands.guilds(discord.Object(id=808959433010577439))
     async def coop3(self: Self, interaction: discord.Interaction, time: app_commands.Choice[str]) -> None:
         await interaction.response.defer()
         request_url = SPLA3_BASE_URL + 'coop-grouping' + '/' + time.value
