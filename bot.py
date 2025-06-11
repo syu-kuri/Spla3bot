@@ -25,5 +25,4 @@ class Spla3Bot(commands.Bot):
         LogUtil.info(Messages.BI0000000001)
 
     async def setup_hook(self: Self):
-        # await self.tree.sync()
-        await self.tree.sync(guild=discord.Object(id=808959433010577439))
+        await self.tree.sync()
