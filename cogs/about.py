@@ -16,7 +16,6 @@ class InfoCog(Cog):
         name='about',
         description='Botの情報を返します'
     )
-    @app_commands.guilds(discord.Object(id=808959433010577439))
     async def about(self, interaction: discord.Interaction):
         await interaction.response.defer()
 
