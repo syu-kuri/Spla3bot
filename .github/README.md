@@ -31,21 +31,17 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 
 ## List of commands
 ### View stage information
-* `stage [rule] Optional[time]` ... Returns stage information for the selected rule and time.
-* `bankara Optional[time]` ... Returns two modes of banca match.
+* `stage [match] [timing]` ... Returns stage information for the selected rule and time.
+  * **match** : select battle mode. regular | bankara-challenge | bankara-open | x
+  * **timing** : select timing. now | next | schedule
 
-### Random select weapon
-* `weapon` ... Returns a random selection of one from all the weapons.
+* `coop [timing]` ... Returns stage information for the selected time.
+  * **timing** : select timing. now | next | schedule
 
 ### Search weapon from sub weapon or special
 * `sub [sub-weapon-name]` ... Returns a list of weapons matched from the selected sub weapon.
 * `special [special-name]` ... Returns a list of weapons matched by the selected special.
 
-### Switch Friend Code
-* `register [friend-code]` ... Register your friend code.
-* `update [friend-code]` ... Update your friend code.
-* `delete` ... Delete your friend code.
-* `search [user]` ... Returns the friend code of the specified person.
 
 ## Example of command execution
 <div align="center">
@@ -59,5 +55,5 @@ Sorry, I'm not sure. Finish mentions and normal commands support.
 * ~~Support for Salmon Run information after API support~~
 * ~~Add random weapon selection~~
 * ~~Add stage image~~
-* Get all stage information
+* ~~Get all stage information~~
 * 4 vs. 4 teaming
