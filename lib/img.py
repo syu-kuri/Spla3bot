@@ -1,7 +1,7 @@
 from PIL import Image
 import requests
 
-def get_rule_image(p1):
+def get_rule_image(rule_name):
     rule_images = {
         "ナワバリバトル": "https://images-ext-1.discordapp.net/external/sNH8hPsRSuUYU7eMhUebaL7v8I3q82OepAd-vN_5sWE/https/www.nintendo.co.jp/switch/aab6a/assets/images/battle-sec01_logo.png",
         "バンカラマッチ": "https://media.discordapp.net/attachments/808221718106603540/812571951872081920/battle-sec02_logo.png",
@@ -11,7 +11,7 @@ def get_rule_image(p1):
         "ガチホコバトル": "https://cdn.discordapp.com/attachments/808221718106603540/815040449055162368/show.png",
         "ガチアサリ": "https://cdn.discordapp.com/attachments/808221718106603540/815040479166595092/show.png"
     }
-    return rule_images.get(p1)
+    return rule_images.get(rule_name)
 
 def get_concat_h_cut(url1, url2):
     response1 = requests.get(url1, stream=True)

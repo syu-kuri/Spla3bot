@@ -1,7 +1,5 @@
-import sys
 import asyncio
 from asyncpg import PostgresError, UniqueViolationError
-sys.path.append("../src/")
 
 import discord
 from discord import app_commands
