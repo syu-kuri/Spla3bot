@@ -7,10 +7,9 @@ from lib.discord import *
 
 
 class Spla3Bot(commands.Bot):
-    def __init__(self, **kwargs):
-        self.database = kwargs.pop('database')
-        intents=discord.Intents.default()
-        super(Spla3Bot, self).__init__(
+    def __init__(self):
+        intents = discord.Intents.default()
+        super().__init__(
             command_prefix=commands.when_mentioned_or(prefix),
             intents=intents,
             help_command=None
