@@ -6,17 +6,17 @@ def user_agent():
     }
     return headers
 
-def get_schedule(p1, p2):
+def get_schedule(rule, time_slot):
     url = "https://spla3.yuu26.com/api/"
-    res = requests.get(f"{url}{p1}/{p2}", headers=user_agent())
+    res = requests.get(f"{url}{rule}/{time_slot}", headers=user_agent())
     if res.status_code == 200:
         data = res.json()
         results = data['results'][0]
         return results
 
-def get_all_schedule(p1):
+def get_all_schedule(rule):
     url = "https://spla3.yuu26.com/api/"
-    res = requests.get(f"{url}{p1}/schedule", headers=user_agent())
+    res = requests.get(f"{url}{rule}/schedule", headers=user_agent())
     if res.status_code == 200:
         data = res.json()
         results = data['results']
