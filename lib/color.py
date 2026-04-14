@@ -1,4 +1,4 @@
-def get_rule_color(p1: str):
+def get_rule_color(rule_name: str):
     rule_colors = {
         "ナワバリバトル": 0x7eff00,
         "フェスバトル": 0xA281B7,
@@ -8,4 +8,4 @@ def get_rule_color(p1: str):
         "ガチホコバトル": 0xff7213,
         "ガチアサリ": 0xff7213
     }
-    return rule_colors.get(p1)
+    return rule_colors.get(rule_name)

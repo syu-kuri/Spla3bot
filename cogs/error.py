@@ -2,13 +2,39 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Cog
 
-
 import traceback
 
 
 class ErrorCog(Cog):
+    ERROR_CHANNEL_ID = 1021461009925415062
+
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+
+    def _build_support_view(self) -> discord.ui.View:
+        view = discord.ui.View()
+        style = discord.ButtonStyle.link
+        view.add_item(discord.ui.Button(style=style, label="Support server", url="https://discord.gg/zwbvUPTZHc"))
+        view.add_item(discord.ui.Button(style=style, label="Twitter", url="https://twitter.com/syukur1ch"))
+        view.add_item(discord.ui.Button(style=style, label="GitHub", url="https://github.com/syu-kuri/Spla3bot"))
+        return view
+
+    async def _report_error(self, ctx, error) -> int:
+        """エラー情報をエラーチャンネルに送信し、メッセージIDを返す"""
+        embed = discord.Embed(title="エラー情報", description="", color=0xf00)
+        if isinstance(ctx.channel, discord.channel.DMChannel):
+            embed.add_field(name="エラー発生サーバー名", value=ctx.channel, inline=False)
+            embed.add_field(name="エラー発生サーバーID", value=ctx.channel.id, inline=False)
+        else:
+            embed.add_field(name="エラー発生サーバー名", value=ctx.guild.name, inline=False)
+            embed.add_field(name="エラー発生サーバーID", value=ctx.guild.id, inline=False)
+        embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
+        embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
+        embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
+        t = f"```py\n{''.join(traceback.TracebackException.from_exception(error))}```"
+        embed.add_field(name="発生エラー", value=t if len(t) < 2048 else f"```py\n{error}\n```", inline=False)
+        m = await self.bot.get_channel(self.ERROR_CHANNEL_ID).send(embed=embed)
+        return m.id
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -31,84 +57,16 @@ class ErrorCog(Cog):
         elif isinstance(error, commands.UserNotFound):
             emb = discord.Embed(title="エラーが発生しました", description="ユーザーが見つかりませんでした。", color=discord.Color.red())
             await ctx.reply(embed=emb)
-        elif isinstance(error, commands.HybridCommandError):
-            ch = 1021461009925415062
-
-            view = discord.ui.View()
-            style = discord.ButtonStyle.link
-            Server = discord.ui.Button(style=style, label="Support server", url="https://discord.gg/zwbvUPTZHc")
-            Twitter = discord.ui.Button(style=style, label="Twitter", url="https://twitter.com/syukur1ch")
-            GitHub = discord.ui.Button(style=style, label="GitHub", url="https://github.com/syu-kuri/Spla3bot")
-            view.add_item(item=Server)
-            view.add_item(item=Twitter)
-            view.add_item(item=GitHub)
-
-            embed = discord.Embed(title="エラー情報", description="", color=0xf00)
-            if isinstance(ctx.channel, discord.channel.DMChannel):
-                embed.add_field(name="エラー発生サーバー名", value=ctx.channel, inline=False)
-                embed.add_field(name="エラー発生サーバーID", value=ctx.channel.id, inline=False)
-                embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
-                embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
-                embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
-                embed.add_field(name="発生エラー", value=error, inline=False)
-
-                t = f"```py\n{''.join(traceback.TracebackException.from_exception(error))}```"
-                embed.add_field(name="発生エラー", value=t if len(t < 2048) else f"```py\n{error}\n```", inline=False)
-
-                m = await self.bot.get_channel(ch).send(embed=embed)
-                emb = discord.Embed(title="エラーが発生しました", description=f"何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のコードも一緒にお知らせください", color=discord.Color.red())
-                emb.add_field(name="問い合わせID", value=m.id)
-                await ctx.reply(embed=emb, view=view)
-            else:
-                embed.add_field(name="エラー発生サーバー名", value=ctx.guild.name, inline=False)
-                embed.add_field(name="エラー発生サーバーID", value=ctx.guild.id, inline=False)
-                embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
-                embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
-                embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
-                embed.add_field(name="発生エラー", value=error, inline=False)
-                m = await self.bot.get_channel(ch).send(embed=embed)
-                emb = discord.Embed(title="エラーが発生しました", description=f"何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のコードも一緒にお知らせください", color=discord.Color.red())
-                emb.add_field(name="問い合わせID", value=m.id)
-                await ctx.reply(embed=emb, view=view)
         else:
-            ch = 1021461009925415062
-
-            view = discord.ui.View()
-            style = discord.ButtonStyle.link
-            Server = discord.ui.Button(style=style, label="Support server", url="https://discord.gg/zwbvUPTZHc")
-            Twitter = discord.ui.Button(style=style, label="Twitter", url="https://twitter.com/syukur1ch")
-            GitHub = discord.ui.Button(style=style, label="GitHub", url="https://github.com/syu-kuri/Spla3bot")
-            view.add_item(item=Server)
-            view.add_item(item=Twitter)
-            view.add_item(item=GitHub)
-
-            embed = discord.Embed(title="エラー情報", description="", color=0xf00)
-            if isinstance(ctx.channel, discord.channel.DMChannel):
-                embed.add_field(name="エラー発生サーバー名", value=ctx.channel, inline=False)
-                embed.add_field(name="エラー発生サーバーID", value=ctx.channel.id, inline=False)
-                embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
-                embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
-                embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
-                embed.add_field(name="発生エラー", value=error, inline=False)
-
-                t = f"```py\n{''.join(traceback.TracebackException.from_exception(error))}```"
-                embed.add_field(name="発生エラー", value=t if len(t < 2048) else f"```py\n{error}\n```", inline=False)
-
-                m = await self.bot.get_channel(ch).send(embed=embed)
-                emb = discord.Embed(title="エラーが発生しました", description=f"何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のコードも一緒にお知らせください", color=discord.Color.red())
-                emb.add_field(name="問い合わせID", value=m.id)
-                await ctx.reply(embed=emb, view=view)
-            else:
-                embed.add_field(name="エラー発生サーバー名", value=ctx.guild.name, inline=False)
-                embed.add_field(name="エラー発生サーバーID", value=ctx.guild.id, inline=False)
-                embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
-                embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
-                embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
-                embed.add_field(name="発生エラー", value=error, inline=False)
-                m = await self.bot.get_channel(ch).send(embed=embed)
-                emb = discord.Embed(title="エラーが発生しました", description=f"何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のコードも一緒にお知らせください", color=discord.Color.red())
-                emb.add_field(name="問い合わせID", value=m.id)
-                await ctx.reply(embed=emb, view=view)
+            view = self._build_support_view()
+            msg_id = await self._report_error(ctx, error)
+            emb = discord.Embed(
+                title="エラーが発生しました",
+                description="何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のコードも一緒にお知らせください",
+                color=discord.Color.red()
+            )
+            emb.add_field(name="問い合わせID", value=msg_id)
+            await ctx.reply(embed=emb, view=view)
 
 
 async def setup(bot: commands.Bot) -> None:
