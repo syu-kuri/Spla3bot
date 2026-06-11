@@ -10,10 +10,19 @@ class AdminCog(Cog, name="Bot製作者のみ使用可能コマンド"):
 
     @commands.command(name="reload", hidden=True)
     @commands.is_owner()
-    async def reload(self, inter, extension):
-        self.bot.reload_extension(f"cogs.{extension}")
-        embed = discord.Embed(title='リロード成功', description=f'{extension} Cog をリロードしました。', color=0xff00c8)
-        await inter.reply(embed=embed)
+    async def reload(self, ctx, extension):
+        extension_name = f"cogs.{extension}"
+        try:
+            await self.bot.reload_extension(extension_name)
+        except commands.ExtensionNotFound:
+            embed = discord.Embed(title='リロード失敗', description=f'{extension} Cog が見つかりませんでした。', color=discord.Color.red())
+        except commands.ExtensionNotLoaded:
+            embed = discord.Embed(title='リロード失敗', description=f'{extension} Cog は読み込まれていません。', color=discord.Color.red())
+        except commands.ExtensionFailed as e:
+            embed = discord.Embed(title='リロード失敗', description=f'{extension} Cog の読み込み中にエラーが発生しました。\n```py\n{e}\n```', color=discord.Color.red())
+        else:
+            embed = discord.Embed(title='リロード成功', description=f'{extension} Cog をリロードしました。', color=0xff00c8)
+        await ctx.reply(embed=embed)
 
     @commands.command(name="get_error", hidden=True)
     @commands.is_owner()
