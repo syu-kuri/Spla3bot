@@ -3,8 +3,6 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Cog
 
-from lib.config import *
-
 
 class HelpCog(Cog):
     def __init__(self, bot: commands.Bot) -> None:
