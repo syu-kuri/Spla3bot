@@ -1,0 +1,9 @@
+services:
+  spla3bot:
+    build:
+      context: .
+    image: spla3bot:latest
+    env_file:
+      - .env
+    restart: unless-stopped
+    stop_grace_period: 30s
