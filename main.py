@@ -1,7 +1,8 @@
 import asyncio
+import os
 
 from bot import Spla3Bot
-from lib.config import *
+from lib.config import settings
 
 async def main():
     bot = Spla3Bot()
@@ -16,7 +17,7 @@ async def main():
                 print(f"Failed to load extension {extension}\n{exception}")
 
     try:
-        await bot.start(token)
+        await bot.start(settings.token)
     except KeyboardInterrupt:
         await bot.logout()
 
