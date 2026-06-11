@@ -30,7 +30,7 @@ class InfoCog(Cog):
         embed.add_field(name="応答速度(Ping)", value=f"{ping}ms", inline=False)
         embed.add_field(name="サーバー", value=f"{guilds}guilds", inline=True)
         embed.add_field(name="ユーザー", value=f"{users}users", inline=True)
-        embed.add_field(name="クリエイター", value=f"しゅーくり#9118", inline=False)
+        embed.add_field(name="クリエイター", value="しゅーくり#9118", inline=False)
 
         await ctx.followup.send(embed=embed)
 
