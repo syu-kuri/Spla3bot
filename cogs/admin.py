@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Cog
 
-from lib.config import *
+from lib.config import settings
 
 class AdminCog(Cog, name="Bot製作者のみ使用可能コマンド"):
     def __init__(self, bot: commands.Bot) -> None:
@@ -27,8 +27,7 @@ class AdminCog(Cog, name="Bot製作者のみ使用可能コマンド"):
     @commands.command(name="get_error", hidden=True)
     @commands.is_owner()
     async def get_error(self, ctx, error_id):
-        ch = int(error_ch)
-        channel = self.bot.get_channel(ch)
+        channel = self.bot.get_channel(settings.error_channel_id)
         msg = await channel.fetch_message(int(error_id))
         embeds = msg.embeds
         for embed in embeds:

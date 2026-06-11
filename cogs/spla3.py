@@ -1,6 +1,7 @@
 import io
 import json
 import random
+from pathlib import Path
 from typing import Optional
 
 import discord
@@ -8,30 +9,37 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Cog
 
-from lib.config import *
-from lib.spla_func import *
-from lib.img import *
-from lib.color import *
-from lib.text import *
+from lib.color import get_rule_color
+from lib.img import get_concat_h_cut, get_rule_image
+from lib.spla_func import spla3
+from lib.text import hiraToKata
 
-from src.weapons3_list import *
-
-WEAPONS_FILE = "src/weapons3.json"
+WEAPONS_FILE = Path("src/weapons3.json")
 
 
 class Spla3Cog(Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        self.weapons = self._load_weapons()
+        self.sub_list = self._unique_weapon_values("sub")
+        self.special_list = self._unique_weapon_values("special")
+
+    def _load_weapons(self) -> list[dict]:
+        with WEAPONS_FILE.open("r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def _unique_weapon_values(self, field: str) -> list[str]:
+        return sorted({weapon[field] for weapon in self.weapons if weapon.get(field)})
 
     # ── オートコンプリート ─────────────────────────────
 
     async def sp_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
         target = hiraToKata(current)
-        return [app_commands.Choice(name=name, value=name) for name in special_list if target in name]
+        return [app_commands.Choice(name=name, value=name) for name in self.special_list if target in name][:25]
 
     async def sub_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
         target = hiraToKata(current)
-        return [app_commands.Choice(name=name, value=name) for name in sub_list if target in name]
+        return [app_commands.Choice(name=name, value=name) for name in self.sub_list if target in name][:25]
 
     # ── 共通ヘルパー ──────────────────────────────────
 
@@ -48,10 +56,8 @@ class Spla3Cog(Cog):
     async def _search_weapon(self, ctx: discord.Interaction, field: str, value: str) -> None:
         """サブ/スペシャルでブキを検索してembedを送信する"""
         await ctx.response.defer()
-        with open(WEAPONS_FILE, 'r', encoding="utf-8") as f:
-            json_datas = json.load(f)
 
-        items = [w for w in json_datas if w[field] == value]
+        items = [w for w in self.weapons if w[field] == value]
         if items:
             weapons = "\n".join(w["name"] for w in items)
             embed = discord.Embed(
@@ -144,10 +150,8 @@ class Spla3Cog(Cog):
     @app_commands.command(name="weapon", description="ブキガチャを行います")
     async def random_weapon(self, ctx: discord.Interaction):
         await ctx.response.defer(ephemeral=True)
-        with open(WEAPONS_FILE, 'r', encoding="utf-8") as f:
-            json_datas = json.load(f)
 
-        weapon_data = random.choice(json_datas)
+        weapon_data = random.choice(self.weapons)
         embed = discord.Embed(title=f"{ctx.user.name}のブキはこれだ！", color=discord.Colour.yellow())
         embed.add_field(name="ブキ名", value=f'```{weapon_data["name"]}```', inline=False)
         embed.add_field(name="サブ", value=f'```{weapon_data["sub"]}```', inline=True)

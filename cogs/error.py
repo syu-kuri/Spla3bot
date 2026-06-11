@@ -4,10 +4,10 @@ from discord.ext.commands import Cog
 
 import traceback
 
+from lib.config import settings
+
 
 class ErrorCog(Cog):
-    ERROR_CHANNEL_ID = 1021461009925415062
-
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
@@ -33,7 +33,8 @@ class ErrorCog(Cog):
         embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
         t = f"```py\n{''.join(traceback.TracebackException.from_exception(error))}```"
         embed.add_field(name="発生エラー", value=t if len(t) < 2048 else f"```py\n{error}\n```", inline=False)
-        m = await self.bot.get_channel(self.ERROR_CHANNEL_ID).send(embed=embed)
+        channel = self.bot.get_channel(settings.error_channel_id)
+        m = await channel.send(embed=embed)
         return m.id
 
     @commands.Cog.listener()

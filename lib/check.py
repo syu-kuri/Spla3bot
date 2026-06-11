@@ -1,5 +1,5 @@
-from lib.molding import *
-from lib.api import *
+from lib.api import get_schedule
+from lib.molding import common_molding, fest_molding, tricolor_molding
 
 def check_fest(data, time_slot):
     if data["is_fest"]:
