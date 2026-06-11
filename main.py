@@ -6,7 +6,7 @@ from lib.config import settings
 
 async def main():
     bot = Spla3Bot()
-    for file in os.listdir(f"./cogs"):
+    for file in os.listdir("./cogs"):
         if file.endswith(".py"):
             extension = file[:-3]
             try:
