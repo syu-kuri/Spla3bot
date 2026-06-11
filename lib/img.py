@@ -1,5 +1,16 @@
+import asyncio
+import io
+
+import aiohttp
 from PIL import Image
-import requests
+
+
+IMAGE_TIMEOUT = aiohttp.ClientTimeout(total=10)
+
+
+class ImageFetchError(RuntimeError):
+    pass
+
 
 def get_rule_image(rule_name):
     rule_images = {
@@ -13,14 +24,28 @@ def get_rule_image(rule_name):
     }
     return rule_images.get(rule_name)
 
-def get_concat_h_cut(url1, url2):
-    response1 = requests.get(url1, stream=True)
-    response2 = requests.get(url2, stream=True)
-    response1.raw.decode_content = True
-    response2.raw.decode_content = True
-    img1 = Image.open(response1.raw)
-    img2 = Image.open(response2.raw)
-    dst = Image.new('RGB', (img1.width + img2.width, min(img1.height, img2.height)))
-    dst.paste(img1, (0, 0))
-    dst.paste(img2, (img1.width, 0))
-    return dst
+
+async def _fetch_image_bytes(session: aiohttp.ClientSession, url: str) -> bytes:
+    try:
+        async with session.get(url) as response:
+            if response.status != 200:
+                raise ImageFetchError(f"Image request returned HTTP {response.status}")
+            return await response.read()
+    except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+        raise ImageFetchError("Failed to request stage image") from e
+
+
+async def get_concat_h_cut(url1, url2):
+    async with aiohttp.ClientSession(timeout=IMAGE_TIMEOUT) as session:
+        image_bytes1, image_bytes2 = await asyncio.gather(
+            _fetch_image_bytes(session, url1),
+            _fetch_image_bytes(session, url2),
+        )
+
+    with Image.open(io.BytesIO(image_bytes1)) as img1, Image.open(io.BytesIO(image_bytes2)) as img2:
+        img1 = img1.convert("RGB")
+        img2 = img2.convert("RGB")
+        dst = Image.new("RGB", (img1.width + img2.width, min(img1.height, img2.height)))
+        dst.paste(img1, (0, 0))
+        dst.paste(img2, (img1.width, 0))
+        return dst

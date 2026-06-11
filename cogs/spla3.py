@@ -10,7 +10,8 @@ from discord.ext import commands
 from discord.ext.commands import Cog
 
 from lib.color import get_rule_color
-from lib.img import get_concat_h_cut, get_rule_image
+from lib.api import Spla3APIError
+from lib.img import ImageFetchError, get_concat_h_cut, get_rule_image
 from lib.spla_func import spla3
 from lib.text import hiraToKata
 
@@ -45,7 +46,7 @@ class Spla3Cog(Cog):
 
     async def _send_stage_embed(self, ctx: discord.Interaction, embed: discord.Embed, image_urls: list[str]) -> None:
         """ステージ画像2枚を横並びにしてembedを送信する"""
-        img = get_concat_h_cut(image_urls[0], image_urls[1])
+        img = await get_concat_h_cut(image_urls[0], image_urls[1])
         img_binary = io.BytesIO()
         img.save(img_binary, format='PNG')
         img_binary.seek(0)
@@ -94,14 +95,22 @@ class Spla3Cog(Cog):
     async def stage3(self, ctx: discord.Interaction, rules: app_commands.Choice[str], tz: Optional[app_commands.Choice[str]]):
         await ctx.response.defer()
         time_slot = tz.value if tz is not None else "now"
-        data = spla3(rules.value, time_slot)
+        try:
+            data = await spla3(rules.value, time_slot)
 
-        not_coop = ["ナワバリ", "バンカラ(チャレンジ)", "バンカラ(オープン)", "Xマッチ"]
+            not_coop = ["ナワバリ", "バンカラ(チャレンジ)", "バンカラ(オープン)", "Xマッチ"]
 
-        if rules.name in not_coop:
-            await self._send_battle_stage(ctx, rules.name, data)
-        else:
-            await self._send_coop_stage(ctx, data)
+            if rules.name in not_coop:
+                await self._send_battle_stage(ctx, rules.name, data)
+            else:
+                await self._send_coop_stage(ctx, data)
+        except (Spla3APIError, ImageFetchError):
+            embed = discord.Embed(
+                title="ステージ情報を取得できませんでした",
+                description="しばらく時間をおいてから再度お試しください。",
+                color=discord.Colour.red()
+            )
+            await ctx.followup.send(embed=embed)
 
     async def _send_battle_stage(self, ctx: discord.Interaction, rule_display_name: str, data: list) -> None:
         is_fest = data[0]
