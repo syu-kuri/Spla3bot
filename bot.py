@@ -3,7 +3,6 @@ import discord.app_commands
 from discord.ext import commands
 
 from lib.config import settings
-from lib.discord import *
 
 
 class Spla3Bot(commands.Bot):

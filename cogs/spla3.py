@@ -9,11 +9,10 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Cog
 
-from lib.config import *
-from lib.spla_func import *
-from lib.img import *
-from lib.color import *
-from lib.text import *
+from lib.color import get_rule_color
+from lib.img import get_concat_h_cut, get_rule_image
+from lib.spla_func import spla3
+from lib.text import hiraToKata
 
 WEAPONS_FILE = Path("src/weapons3.json")
 
