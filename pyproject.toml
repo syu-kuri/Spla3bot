@@ -1,6 +1,6 @@
 [project]
 name = "spla3bot"
-version = "0.1.0"
+version = "7.1.0"
 description = "About This repository is for knowing Splatoon3 stage information on Discord Bot."
 readme = "README.md"
 requires-python = ">=3.12"
