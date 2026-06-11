@@ -35,6 +35,7 @@ Slash commands:
 | `/info` | Returns bot information. |
 | `/help` | Returns command help. |
 
+
 ## Docker
 
 Create `.env` from the example and set your Discord bot values.
@@ -68,6 +69,7 @@ Stop the bot.
 ```sh
 docker compose down
 ```
+
 
 ## Local Development
 
