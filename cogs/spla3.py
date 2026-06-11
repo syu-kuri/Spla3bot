@@ -12,6 +12,7 @@ from discord.ext.commands import Cog
 from lib.color import get_rule_color
 from lib.api import Spla3APIError
 from lib.img import ImageFetchError, get_concat_h_cut, get_rule_image
+from lib.models import BattleStage, CoopStage, FestStage, TricolorStage
 from lib.spla_func import spla3
 from lib.text import hiraToKata
 
@@ -112,46 +113,43 @@ class Spla3Cog(Cog):
             )
             await ctx.followup.send(embed=embed)
 
-    async def _send_battle_stage(self, ctx: discord.Interaction, rule_display_name: str, data: list) -> None:
-        is_fest = data[0]
-        if is_fest:
-            is_tricolor = data[1]
-            if is_tricolor:
+    async def _send_battle_stage(self, ctx: discord.Interaction, rule_display_name: str, data: BattleStage | FestStage | TricolorStage) -> None:
+        if data.is_fest:
+            if isinstance(data, TricolorStage):
                 # トリカラあり
-                embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", color=get_rule_color(data[4]))
-                embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
-                embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
-                embed.add_field(name="トリカラステージ", value=f"```{data[6]}```", inline=False)
-                embed.set_thumbnail(url=get_rule_image(data[4]))
-                embed.set_image(url=data[7])
+                embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", color=get_rule_color(data.rule_name))
+                embed.add_field(name="開催時間", value=f"```{data.start_time} ～ {data.end_time}```", inline=False)
+                embed.add_field(name="フェスステージ", value=f"```{data.stages[0]}\n{data.stages[1]}```", inline=False)
+                embed.add_field(name="トリカラステージ", value=f"```{data.tricolor_stage}```", inline=False)
+                embed.set_thumbnail(url=get_rule_image(data.rule_name))
+                embed.set_image(url=data.tricolor_image_url)
                 await ctx.followup.send(embed=embed)
             else:
                 # トリカラなし
-                embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", color=get_rule_color(data[4]))
-                embed.add_field(name="開催時間", value=f"```{data[2]} ～ {data[3]}```", inline=False)
-                embed.add_field(name="フェスステージ", value=f"```{data[5][0]}\n{data[5][1]}```", inline=False)
+                embed = discord.Embed(title="splatoon3 ステージ情報 | フェス開催中", color=get_rule_color(data.rule_name))
+                embed.add_field(name="開催時間", value=f"```{data.start_time} ～ {data.end_time}```", inline=False)
+                embed.add_field(name="フェスステージ", value=f"```{data.stages[0]}\n{data.stages[1]}```", inline=False)
                 embed.add_field(name="トリカラステージ", value="```現在トリカラは開催されていません```", inline=False)
-                embed.set_thumbnail(url=get_rule_image(data[4]))
-                await self._send_stage_embed(ctx, embed, data[7])
+                embed.set_thumbnail(url=get_rule_image(data.rule_name))
+                await self._send_stage_embed(ctx, embed, data.image_urls)
         else:
             # 通常マッチ
-            embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rule_display_name}", color=get_rule_color(data[3]))
-            embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-            embed.add_field(name="ルール", value=f"```{data[3]}```", inline=False)
-            embed.add_field(name="ステージ", value=f"```{data[4][0]}\n{data[4][1]}```", inline=False)
-            embed.set_thumbnail(url=get_rule_image(data[3]))
-            await self._send_stage_embed(ctx, embed, data[5])
+            embed = discord.Embed(title=f"splatoon3 ステージ情報 | {rule_display_name}", color=get_rule_color(data.rule_name))
+            embed.add_field(name="開催時間", value=f"```{data.start_time} ～ {data.end_time}```", inline=False)
+            embed.add_field(name="ルール", value=f"```{data.rule_name}```", inline=False)
+            embed.add_field(name="ステージ", value=f"```{data.stages[0]}\n{data.stages[1]}```", inline=False)
+            embed.set_thumbnail(url=get_rule_image(data.rule_name))
+            await self._send_stage_embed(ctx, embed, data.image_urls)
 
-    async def _send_coop_stage(self, ctx: discord.Interaction, data: list) -> None:
-        is_big_run = data[0]
-        title = "splatoon3 ステージ情報 | サーモンラン ビッグラン中" if is_big_run else "splatoon3 ステージ情報 | サーモンラン"
-        weapons = "\n".join(data[5])
+    async def _send_coop_stage(self, ctx: discord.Interaction, data: CoopStage) -> None:
+        title = "splatoon3 ステージ情報 | サーモンラン ビッグラン中" if data.is_big_run else "splatoon3 ステージ情報 | サーモンラン"
+        weapons = "\n".join(data.weapons)
         embed = discord.Embed(title=title, color=get_rule_color("サーモンラン"))
-        embed.add_field(name="開催時間", value=f"```{data[1]} ～ {data[2]}```", inline=False)
-        embed.add_field(name="ステージ", value=f"```{data[3]}```", inline=False)
+        embed.add_field(name="開催時間", value=f"```{data.start_time} ～ {data.end_time}```", inline=False)
+        embed.add_field(name="ステージ", value=f"```{data.stage}```", inline=False)
         embed.add_field(name="支給ブキ", value=f"```{weapons}```", inline=False)
         embed.set_thumbnail(url=get_rule_image("サーモンラン"))
-        embed.set_image(url=data[4])
+        embed.set_image(url=data.image_url)
         await ctx.followup.send(embed=embed)
 
     # ── /weapon ───────────────────────────────────────
