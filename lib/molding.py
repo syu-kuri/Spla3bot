@@ -1,11 +1,19 @@
 import datetime
-from typing import TypeVar
+from typing import TypedDict, TypeVar
 
 from lib.api import Spla3APIError
 from lib.models import BattleStage, CoopStage, FestStage, TricolorStage
 
 
 FieldType = TypeVar("FieldType")
+
+
+class _BattleFields(TypedDict):
+    is_fest: bool
+    start_time: str
+    end_time: str
+    rule_name: str
+    stages: list[str]
 
 
 def _required_field(data: object, field: str, expected_type: type[FieldType]) -> FieldType:
@@ -41,14 +49,20 @@ def _battle_stages(data: dict) -> list:
     return stages
 
 
-def common_molding(data: dict) -> BattleStage:
-    stages = _battle_stages(data)
-    return BattleStage(
+def _battle_fields(data: dict, stages: list) -> _BattleFields:
+    return _BattleFields(
         is_fest=schedule_flag(data, "is_fest"),
         start_time=time_molding(_required_text(data, "start_time")),
         end_time=time_molding(_required_text(data, "end_time")),
         rule_name=_required_text(_required_field(data, "rule", dict), "name"),
         stages=[_required_text(stage, "name") for stage in stages],
+    )
+
+
+def common_molding(data: dict) -> BattleStage:
+    stages = _battle_stages(data)
+    return BattleStage(
+        **_battle_fields(data, stages),
         image_urls=[_required_text(stage, "image") for stage in stages],
     )
 
@@ -69,12 +83,8 @@ def common_coop_molding(data: dict) -> CoopStage:
 def fest_molding(data: dict) -> FestStage:
     stages = _battle_stages(data)
     return FestStage(
-        is_fest=schedule_flag(data, "is_fest"),
+        **_battle_fields(data, stages),
         is_tricolor=schedule_flag(data, "is_tricolor"),
-        start_time=time_molding(_required_text(data, "start_time")),
-        end_time=time_molding(_required_text(data, "end_time")),
-        rule_name=_required_text(_required_field(data, "rule", dict), "name"),
-        stages=[_required_text(stage, "name") for stage in stages],
         image_urls=[_required_text(stage, "image") for stage in stages],
     )
 
@@ -83,12 +93,8 @@ def tricolor_molding(data: dict) -> TricolorStage:
     stages = _battle_stages(data)
     tricolor_stage = _required_field(data, "tricolor_stage", dict)
     return TricolorStage(
-        is_fest=schedule_flag(data, "is_fest"),
+        **_battle_fields(data, stages),
         is_tricolor=schedule_flag(data, "is_tricolor"),
-        start_time=time_molding(_required_text(data, "start_time")),
-        end_time=time_molding(_required_text(data, "end_time")),
-        rule_name=_required_text(_required_field(data, "rule", dict), "name"),
-        stages=[_required_text(stage, "name") for stage in stages],
         tricolor_stage=_required_text(tricolor_stage, "name"),
         tricolor_image_url=_required_text(tricolor_stage, "image"),
     )

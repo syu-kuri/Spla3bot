@@ -57,13 +57,17 @@ class StageScheduleTests(unittest.IsolatedAsyncioTestCase):
         for label, payload in cases.items():
             with self.subTest(label=label):
                 self.payloads["regular/now"] = payload
-                self.assert_retry(await self.run_stage())
+                with self.assertLogs("cogs.spla3", level="WARNING"):
+                    self.assert_retry(await self.run_stage())
 
     async def test_invalid_json_asks_user_to_retry(self):
         for body in ('{"results":', b"\xff"):
             with self.subTest(body=body):
                 self.raw_responses["regular/now"] = body
-                self.assert_retry(await self.run_stage())
+                with self.assertLogs("cogs.spla3", level="WARNING") as logs:
+                    embed = await self.run_stage()
+                self.assert_retry(embed)
+                self.assertIn("regular/now: Spla3 API response was not valid JSON", logs.output[0])
 
     async def test_invalid_fields_ask_user_to_retry(self):
         cases = [
@@ -85,7 +89,8 @@ class StageScheduleTests(unittest.IsolatedAsyncioTestCase):
                 original = self.payloads[path]["results"][0]
                 self.payloads[path]["results"][0] = original | overrides
                 try:
-                    self.assert_retry(await self.run_stage(rule, time_slot))
+                    with self.assertLogs("cogs.spla3", level="WARNING"):
+                        self.assert_retry(await self.run_stage(rule, time_slot))
                 finally:
                     self.payloads[path]["results"][0] = original
 
