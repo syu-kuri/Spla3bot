@@ -46,8 +46,13 @@ class Spla3Cog(Cog):
     # ── 共通ヘルパー ──────────────────────────────────
 
     async def _send_stage_embed(self, ctx: discord.Interaction, embed: discord.Embed, image_urls: list[str]) -> None:
-        """ステージ画像2枚を横並びにしてembedを送信する"""
-        img = await get_concat_h_cut(image_urls[0], image_urls[1])
+        """ステージ画像を合成できない場合もスケジュールを送信する"""
+        try:
+            img = await get_concat_h_cut(image_urls[0], image_urls[1])
+        except ImageFetchError:
+            await ctx.followup.send(embed=embed)
+            return
+
         img_binary = io.BytesIO()
         img.save(img_binary, format='PNG')
         img_binary.seek(0)
@@ -105,7 +110,7 @@ class Spla3Cog(Cog):
                 await self._send_battle_stage(ctx, rules.name, data)
             else:
                 await self._send_coop_stage(ctx, data)
-        except (Spla3APIError, ImageFetchError):
+        except Spla3APIError:
             embed = discord.Embed(
                 title="ステージ情報を取得できませんでした",
                 description="しばらく時間をおいてから再度お試しください。",

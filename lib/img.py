@@ -42,10 +42,14 @@ async def get_concat_h_cut(url1, url2):
             _fetch_image_bytes(session, url2),
         )
 
-    with Image.open(io.BytesIO(image_bytes1)) as img1, Image.open(io.BytesIO(image_bytes2)) as img2:
-        img1 = img1.convert("RGB")
-        img2 = img2.convert("RGB")
-        dst = Image.new("RGB", (img1.width + img2.width, min(img1.height, img2.height)))
-        dst.paste(img1, (0, 0))
-        dst.paste(img2, (img1.width, 0))
-        return dst
+    try:
+        with Image.open(io.BytesIO(image_bytes1)) as img1, Image.open(io.BytesIO(image_bytes2)) as img2:
+            img1 = img1.convert("RGB")
+            img2 = img2.convert("RGB")
+    except (OSError, ValueError, Image.DecompressionBombError) as e:
+        raise ImageFetchError("Failed to decode stage image") from e
+
+    dst = Image.new("RGB", (img1.width + img2.width, min(img1.height, img2.height)))
+    dst.paste(img1, (0, 0))
+    dst.paste(img2, (img1.width, 0))
+    return dst
