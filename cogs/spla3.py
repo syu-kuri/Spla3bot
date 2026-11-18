@@ -1,5 +1,6 @@
 import io
 import json
+import logging
 import random
 from pathlib import Path
 from typing import Optional
@@ -16,6 +17,7 @@ from lib.models import BattleStage, CoopStage, FestStage, TricolorStage
 from lib.spla_func import spla3
 from lib.text import hiraToKata
 
+logger = logging.getLogger(__name__)
 WEAPONS_FILE = Path("src/weapons3.json")
 
 
@@ -110,7 +112,8 @@ class Spla3Cog(Cog):
                 await self._send_battle_stage(ctx, rules.name, data)
             else:
                 await self._send_coop_stage(ctx, data)
-        except Spla3APIError:
+        except Spla3APIError as error:
+            logger.warning("Stage schedule unavailable for %s/%s: %s", rules.value, time_slot, error)
             embed = discord.Embed(
                 title="ステージ情報を取得できませんでした",
                 description="しばらく時間をおいてから再度お試しください。",

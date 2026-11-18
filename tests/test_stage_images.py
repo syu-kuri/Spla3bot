@@ -80,7 +80,8 @@ class StageImageTests(unittest.IsolatedAsyncioTestCase):
 
     @patch("cogs.spla3.spla3", side_effect=Spla3APIError)
     async def test_schedule_failure_asks_user_to_retry(self, get_schedule):
-        message = await self.run_stage()
+        with self.assertLogs("cogs.spla3", level="WARNING"):
+            message = await self.run_stage()
         self.assertEqual(message["embed"].title, "ステージ情報を取得できませんでした")
         self.assertIn("再度お試しください", message["embed"].description)
         self.assertNotIn("file", message)

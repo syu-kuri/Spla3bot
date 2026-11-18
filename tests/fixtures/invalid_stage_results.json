@@ -1,0 +1,12 @@
+{
+  "top level null": null,
+  "top level list": [],
+  "missing results": {},
+  "null results": {"results": null},
+  "object results": {"results": {"0": {}}},
+  "string results": {"results": "schedule"},
+  "empty results": {"results": []},
+  "null entry": {"results": [null]},
+  "list entry": {"results": [[]]},
+  "missing entry fields": {"results": [{}]}
+}
