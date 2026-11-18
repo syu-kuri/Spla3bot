@@ -1,0 +1,52 @@
+{
+  "regular/now": {
+    "results": [{
+      "is_fest": false,
+      "start_time": "2026-11-18T12:00:00+09:00",
+      "end_time": "2026-11-18T14:00:00+09:00",
+      "rule": {"name": "ナワバリバトル"},
+      "stages": [
+        {"name": "ユノハナ大渓谷", "image": "https://example.com/first.png"},
+        {"name": "ゴンズイ地区", "image": "https://example.com/second.png"}
+      ]
+    }]
+  },
+  "regular/next": {"results": [{"is_fest": true}]},
+  "fest/next": {
+    "results": [{
+      "is_fest": true,
+      "is_tricolor": false,
+      "start_time": "2026-11-18T14:00:00+09:00",
+      "end_time": "2026-11-18T16:00:00+09:00",
+      "rule": {"name": "ナワバリバトル"},
+      "stages": [
+        {"name": "マテガイ放水路", "image": "https://example.com/first.png"},
+        {"name": "ヤガラ市場", "image": "https://example.com/second.png"}
+      ]
+    }]
+  },
+  "x/now": {"results": [{"is_fest": true}]},
+  "fest/now": {
+    "results": [{
+      "is_fest": true,
+      "is_tricolor": true,
+      "start_time": "2026-11-18T12:00:00+09:00",
+      "end_time": "2026-11-18T14:00:00+09:00",
+      "rule": {"name": "ナワバリバトル"},
+      "stages": [
+        {"name": "マテガイ放水路"},
+        {"name": "ヤガラ市場"}
+      ],
+      "tricolor_stage": {"name": "マヒマヒリゾート＆スパ", "image": "https://example.com/tricolor.png"}
+    }]
+  },
+  "coop-grouping/now": {
+    "results": [{
+      "is_big_run": false,
+      "start_time": "2026-11-18T12:00:00+09:00",
+      "end_time": "2026-11-19T12:00:00+09:00",
+      "stage": {"name": "アラマキ砦", "image": "https://example.com/coop.png"},
+      "weapons": [{"name": "スプラシューター"}, {"name": "スプラローラー"}]
+    }]
+  }
+}
